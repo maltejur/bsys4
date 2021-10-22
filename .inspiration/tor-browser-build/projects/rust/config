@@ -1,0 +1,108 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/current_version") %]'
+
+var:
+  current_version: 1.43.0
+  previous_version: 1.42.0
+  container:
+    use_container: 1
+
+targets:
+  ff91esr:
+    var:
+      current_version: 1.53.0
+      previous_version: 1.52.0
+  android:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=x86_64-unknown-linux-gnu,armv7-linux-androideabi,thumbv7neon-linux-androideabi,aarch64-linux-android,i686-linux-android,x86_64-linux-android --set=target.armv7-linux-androideabi.cc=armv7a-linux-androideabi16-clang --set=target.armv7-linux-androideabi.ar=armv7a-linux-androideabi-ar --set=target.thumbv7neon-linux-androideabi.cc=armv7a-linux-androideabi16-clang --set=target.thumbv7neon-linux-androideabi.ar=armv7a-linux-androideabi-ar --set=target.aarch64-linux-android.cc=aarch64-linux-android21-clang --set=target.aarch64-linux-android.ar=aarch64-linux-android-ar --set=target.i686-linux-android.cc=i686-linux-android16-clang --set=target.i686-linux-android.ar=i686-linux-android-ar --set=target.x86_64-linux-android.cc=x86_64-linux-android21-clang --set=target.x86_64-linux-android.ar=x86_64-linux-android-ar
+
+  linux:
+    var:
+      deps:
+        - libc6-dev-i386
+        - lib32stdc++6
+        - build-essential
+        - python
+        - automake
+        - libssl-dev
+        - pkg-config
+        - hardening-wrapper
+      # We use
+      # `--enable-local-rust` to avoid downloading the required compiler during
+      # build time
+      #
+      # `--enable-vendor` to avoid downloading crates during build time and just
+      # use the ones which are shipped with the source
+      #
+      # `--enable-extended` to build not only rustc but cargo as well
+      #
+      # `--enable-llvm-static-stdcpp` to take a libstdc++ on Jessie into account
+      # which is too old and if used gives undefined reference errors
+      #
+      # `--release-channel=stable` to just include stable features in the
+      # compiler
+      #
+      # `--sysconfdir=etc` to avoid install failures as |make install| wants to
+      # write to /etc otherwise
+      #
+      # the `target` triple to explicitly specify the architecture and platform
+      # for the compiler/std lib. Ideally, it should not be needed unless one is
+      # cross-compiling, but compiling `alloc_jemalloc` fails without that in a
+      # 32bit container. "--host=x86_64-unknown-linux-gnu" is used in its
+      # configure script in this case.
+      # `--set=` to explicitly specify the C compiler. We need to compile the
+      # bundled LLVM and it wants to use `cc`. However, we don't have that in
+      # our compiled GCC resulting in weird errors due to C and C++ compiler
+      # version mismatch. We avoid that with this configure option.
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --enable-llvm-static-stdcpp --release-channel=stable --sysconfdir=etc --target=x86_64-unknown-linux-gnu,i686-unknown-linux-gnu --set=target.x86_64-unknown-linux-gnu.cc=gcc --set=target.i686-unknown-linux-gnu.cc=gcc
+
+  osx-x86_64:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=x86_64-apple-darwin --set=target.x86_64-apple-darwin.cc=x86_64-apple-darwin-clang
+
+  windows:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=[% c("arch") %]-pc-windows-gnu
+
+input_files:
+  - project: container-image
+  - project: cmake
+    name: cmake
+  - project: ninja
+    name: ninja
+    enable: '[% c("var/ff91esr") %]'
+  - project: '[% c("var/compiler") %]'
+    name: '[% c("var/compiler") %]'
+  - URL: 'https://static.rust-lang.org/dist/rustc-[% c("var/current_version") %]-src.tar.gz'
+    name: rust
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: rust.gpg
+  - URL: 'https://static.rust-lang.org/dist/rust-[% c("var/previous_version") %]-x86_64-unknown-linux-gnu.tar.xz'
+    name: previous_rust
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: rust.gpg
+  - filename: unwind.patch
+    enable: '[% c("var/windows-i686") %]'
+  - filename: 43909.patch
+    name: 43909
+    enable: '[% ! c("var/ff91esr") %]'
+
+    # Fix for https://github.com/rust-lang/rust/issues/86436
+    # Taken from https://github.com/rust-lang/rust/pull/86568 (merged it 1.54.0)
+  - filename: fix-build-1.53.0.patch
+    enable: '[% c("var/ff91esr") %]'

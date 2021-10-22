@@ -1,0 +1,37 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 20 Oct 2020 16:48:54 +0200
+Subject: Custom brand styling on new private window
+
+---
+ .../privatebrowsing/content/aboutPrivateBrowsing.html           | 1 +
+ browser/themes/shared/tabs.inc.css                              | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
+index f8a17646a6..5904b8438e 100644
+--- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
++++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
+@@ -11,6 +11,7 @@
+     <link rel="icon" href="chrome://browser/skin/privatebrowsing/favicon.svg"/>
+     <link rel="stylesheet" href="chrome://browser/content/aboutPrivateBrowsing.css" media="all"/>
+     <link rel="stylesheet" href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css" media="all"/>
++    <link rel="stylesheet" href="chrome://branding/content/aboutPrivateBrowsing.css" media="all"/>
+     <link rel="localization" href="branding/brand.ftl"/>
+     <link rel="localization" href="browser/branding/brandings.ftl"/>
+     <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
+diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
+index 5c497dfcc2..3dd65a4046 100644
+--- a/browser/themes/shared/tabs.inc.css
++++ b/browser/themes/shared/tabs.inc.css
+@@ -30,7 +30,7 @@
+ 
+ :root[privatebrowsingmode=temporary] {
+   /* Value for --in-content-page-background in aboutPrivateBrowsing.css */
+-  --tabpanel-background-color: #25003e;
++  --tabpanel-background-color: #36393f;
+ }
+ 
+ :root[uidensity=compact] {
+-- 
+2.32.0
+

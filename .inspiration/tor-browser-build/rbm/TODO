@@ -1,0 +1,35 @@
+
+- Add support for building packages inside a chroot, with Mock or Iurt.
+
+- Add support for workspace containing only one project, with everything
+  in the root directory (when the projects_dir value is not set).
+
+- When no project name is given on command line, detect the project
+  to use with the current working directory.
+
+- Add a test command. After building packages, this run some integration
+  tests on the packages. This works on packages, or other files created
+  by the build command.
+
+- Add an install command, to install the package that has been built.
+
+- Make the +d+ template variable a function that returns the distro
+  config option value. Make it possible to override distro config in a
+  project's config.
+
+- Add a pkg template function that take a generic package name as
+  argument, and return a distro specific package name. To do this, it
+  will use the first undef value after trying in the following order :
+   * if the config option +distributions/[distro]/packages+ is a hash,
+     then return the value with generic package name as key
+   * if the config option +distributions/[distro]/packages+ is a string,
+     then use it as the package name. You could do an exec in this option,
+     if you want to use a script to convert the package name.
+   * return the same package name
+
+- Write default templates for perl, python, ruby modules, and plugins
+  to generate config file for modules with infos from CPAN, Python
+  package index, Ruby gems, etc ... This should make it possible to
+  create a package for any supported distribution, for a perl, python,
+  ruby module with a single command.
+

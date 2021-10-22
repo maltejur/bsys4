@@ -1,0 +1,26 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
+git_hash: 660e09f3cb20f181b6d6435cb623d65a3922a063
+version: '[% c("abbrev") %]'
+
+var:
+  container:
+    use_container: 1
+  setup: |
+    mkdir -p /var/tmp/dist
+    tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
+    export PATH="/var/tmp/dist/mingw-w64-clang/bin:$PATH"
+
+input_files:
+  - project: container-image
+  - project: clang
+    name: clang
+  - project: cmake
+    name: cmake
+  - project: clang-source
+    name: clang-source
+  - project: llvm-mingw
+    name: llvm-mingw
+  - filename: mingw-winrt.patch
+  - filename: mingw-dwrite_3.patch

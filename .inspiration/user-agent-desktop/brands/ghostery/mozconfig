@@ -1,0 +1,16 @@
+
+ac_add_options --with-app-name=Ghostery
+ac_add_options --with-app-basename=Ghostery
+ac_add_options --enable-official-branding
+ac_add_options --with-branding=browser/branding/ghostery
+ac_add_options --enable-update-channel=release
+ac_add_options --disable-verify-mar
+ac_add_options --disable-crashreporter
+ac_add_options MOZ_TELEMETRY_REPORTING=
+
+export MOZ_APP_PROFILE="Ghostery Browser"
+export ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release
+export MAR_CHANNEL_ID=firefox-ghostery-release
+
+# l10n base directory
+ac_add_options --with-l10n-base=$WORKSPACE/l10n

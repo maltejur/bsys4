@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Fri, 11 Dec 2020 13:54:09 +0100
+Subject: Ignore the glinter
+
+---
+ third_party/python/glean_parser/glean_parser/lint.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/third_party/python/glean_parser/glean_parser/lint.py b/third_party/python/glean_parser/glean_parser/lint.py
+index 73488c5b39..c10db3ac63 100644
+--- a/third_party/python/glean_parser/glean_parser/lint.py
++++ b/third_party/python/glean_parser/glean_parser/lint.py
+@@ -402,7 +402,7 @@ def lint_metrics(
+             file=file,
+         )
+ 
+-    return nits
++    return []
+ 
+ 
+ def lint_yaml_files(
+-- 
+2.32.0
+

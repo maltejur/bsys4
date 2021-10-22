@@ -1,0 +1,34 @@
+# vim: filetype=yaml sw=2
+version: 1.1.1k
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  openssldir: 'usr/local'
+  container:
+    use_container: 1
+
+targets:
+  linux-x86_64:
+    var:
+      configure_opts: -shared enable-ec_nistp_64_gcc_128 linux-x86_64
+  linux-i686:
+    var:
+      configure_opts: -shared linux-x86
+  windows:
+    var:
+      flag_mwindows: ''
+      configure_opts: '-shared --cross-compile-prefix=[% c("arch") %]-w64-mingw32- mingw[% IF c("var/windows-x86_64") %]64[% END %] "[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]"'
+      openssldir: 'Program Files[% IF c("var/windows-i686") %] (x86)[% END %]/OpenSSL'
+  osx-x86_64:
+    var:
+      configure_opts: --cross-compile-prefix=x86_64-apple-darwin- darwin64-x86_64-cc enable-ec_nistp_64_gcc_128
+  android:
+    var:
+      configure_opts: 'CC=[% c("var/CC") %] android-[% c("var/toolchain_arch") %] -no-shared -D__ANDROID_API__=[% c("var/android_min_api") %]'
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - URL: 'https://www.openssl.org/source/openssl-[% c("version") %].tar.gz'
+    sha256sum: 892a0875b9872acd04a9fde79b1f943075d5ea162415de3047c327df33fbaee5

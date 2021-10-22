@@ -1,0 +1,40 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
+version: '[% c("abbrev") %]'
+git_hash: a0a1ce981638109f1f76cd1eecf17a0436a20055
+git_url: https://github.com/PLSysSec/lucet_sandbox_compiler/
+git_submodule: 1
+
+var:
+  container:
+    use_container: 1
+
+input_files:
+  - project: container-image
+  - name: binutils
+    project: binutils
+    enable: '[% c("var/linux") %]'
+  # Our clang still needs GCC parts (libstdc++ for instance) so we include that
+  # one here even though compilation gets done solely by clang.
+  - project: '[% c("var/compiler") %]'
+    name: '[% c("var/compiler") %]'
+    enable: '[% c("var/linux") %]'
+  - name: cmake
+    project: cmake
+  - name: clang
+    project: clang
+  - name: rust
+    project: rust
+  - name: wasi-sysroot
+    project: wasi-sysroot
+  # Use `make cargo_vendor-lucetc` to re-generate the vendor tarball
+  - URL: https://people.torproject.org/~gk/mirrors/sources/lucetc-vendor.tar.bz2
+    sha256sum: 12ba97fca12177e7ed5b5409fcfdbd31dc7db2e82282768d99dee5bcb1b1246a
+  - filename: Remove-march-native-from-COMMON_CFLAGS.patch
+
+steps:
+  cargo_vendor:
+    filename: '[% project %]-vendor-[% c("version") %].tar.bz2'
+    input_files:
+      - project: container-image
+        pkg_type: build

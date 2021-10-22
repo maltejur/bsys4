@@ -1,0 +1,79 @@
+# vim: filetype=yaml sw=2
+filename: 'container-image_[% c("var/container/suite") %]-[% c("var/container/arch") %]-[% sha256(c("pre")).substr(0, 12) %].tar.gz'
+pkg_type: build
+
+var:
+  container:
+    use_container: 1
+    suite: '[% pc(c("origin_project"), "var/container/suite", { step => c("origin_step") }) %]'
+    arch: '[% pc(c("origin_project"), "var/container/arch", { step => c("origin_step") }) %]'
+
+lsb_release:
+  id: Debian
+  codename: jessie
+  release: 8.11
+
+targets:
+  no_containers:
+    filename: containers_disabled
+    pre: ''
+    input_files: []
+    build: |
+      mkdir -p [% dest_dir %]
+      touch [% dest_dir _ '/' _ c('filename') %]
+
+pre: |
+  #!/bin/sh
+  # Version: 2
+  # [% c('var/container/suite') %]
+  set -e
+  export DEBIAN_FRONTEND=noninteractive
+  # Update the package cache so the container installs the most recent
+  # version of required packages.
+  apt-get update -y -q
+  [% IF pc(c('origin_project'), 'var/pre_pkginst', { step => c('origin_step') }) -%]
+  [% pc(c('origin_project'), 'var/pre_pkginst', { step => c('origin_step') }) %]
+  # Update the package cache again because `pre_pkginst` may change the
+  # package manager configuration.
+  apt-get update -y -q
+  [% END -%]
+  apt-get upgrade -y -q
+  [%
+     deps = [];
+     IF pc(c('origin_project'), 'var/deps', { step => c('origin_step') });
+       CALL deps.import(pc(c('origin_project'), 'var/deps', { step => c('origin_step') }));
+     END;
+     IF pc(c('origin_project'), 'var/arch_deps', { step => c('origin_step') });
+       CALL deps.import(pc(c('origin_project'), 'var/arch_deps', { step => c('origin_step') }));
+     END;
+     IF deps.size;
+       IF pc(c('origin_project'), 'var/sort_deps', { step => c('origin_step') });
+         deps = deps.sort;
+       END;
+       FOREACH pkg IN deps;
+         SET p = tmpl(pkg);
+         IF p;
+           GET c('install_package', { pkg_name => p });
+           GET "\n";
+         END;
+       END;
+     END;
+  -%]
+  [% IF pc(c('origin_project'), 'var/post_pkginst', { step => c('origin_step') }) -%]
+  [% pc(c('origin_project'), 'var/post_pkginst', { step => c('origin_step') }) %]
+  [% END -%]
+
+remote_get: |
+  #!/bin/sh
+  set -e
+  [%
+    SET src = shell_quote(c('get_src', { error_if_undef => 1 }));
+    SET dst = shell_quote(c('get_dst', { error_if_undef => 1 }));
+  -%]
+  mkdir -p "[% dst %]"
+  [% c("rbmdir") %]/container archive '[% c("var/container/dir") %]' "[% dst %]/[% c("filename") %]"
+
+input_files:
+  - project: mmdebstrap-image
+    target:
+      - '[% c("var/container/suite") %]-[% c("var/container/arch") %]'

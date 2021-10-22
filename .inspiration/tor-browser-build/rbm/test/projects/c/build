@@ -1,0 +1,2 @@
+#!/bin/bash
+echo [% c('version') %]-[% c('option_e') %] > [% dest_dir %]/[% project %]-[% c('version') %]

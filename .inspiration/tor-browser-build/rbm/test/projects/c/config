@@ -1,0 +1,19 @@
+version: 1
+targets:
+  version_1:
+    version: 1
+  version_2:
+    version: 2
+option_e: e
+steps:
+  redirect: build
+  build:
+    option_e: 'build e'
+    targets:
+      version_2:
+        option_e: 'build e - v2'
+  publish:
+    option_e: 'publish e'
+    targets:
+      version_2:
+        option_e: 'publish e - v2'

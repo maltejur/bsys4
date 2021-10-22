@@ -1,0 +1,10 @@
+The files in this directory are a large part of what we use when signing
+releases. The scripts are meant to be templates, though, at the moment
+omitting specific paths and credential information.
+
+Additionally, when starting to use them for your own signing setup don't forget
+to adapt the locale list if needed. The entitlement files, however, are kept
+up-to-date.
+
+The scripts in the nightly/ directory are used to sign and publish the
+nightly updates.

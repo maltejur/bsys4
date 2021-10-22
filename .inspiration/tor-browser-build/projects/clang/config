@@ -1,0 +1,38 @@
+# vim: filetype=yaml sw=2
+version: '[% c("var/llvm_version") %]'
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  llvm_version: '[% pc("clang-source", "version") %]'
+  container:
+    use_container: 1
+
+targets:
+  ff91esr:
+    var:
+      llvm_version: '[% pc("llvm-project", "version") %]'
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+    enable: '[% c("var/linux") %]'
+  - name: binutils
+    project: binutils
+    enable: '[% c("var/linux") %] || [% c("var/android") %]'
+  # We build our own binutils as the one from buster has a regression:
+  # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=953423
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=24458
+  - name: binutils
+    project: binutils
+    enable: '[% c("var/windows") %]'
+    target_prepend:
+     - windows-clang
+  - project: cmake
+    name: cmake
+  - project: clang-source
+    name: clang-source
+    enable: '[% ! c("var/ff91esr") %]'
+  - project: llvm-project
+    name: clang-source
+    enable: '[% c("var/ff91esr") %]'

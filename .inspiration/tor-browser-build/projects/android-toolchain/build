@@ -1,0 +1,66 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+export PROJECT_PATH=/var/tmp/dist/[% project %]
+export SDK_HOME=$PROJECT_PATH/android-sdk-linux
+export NDK_HOME=$PROJECT_PATH/android-ndk
+android_release_dir_9=android-9
+android_release_dir_10=android-10
+android_release_dir_11=android-11
+
+# Make directories
+mkdir -p $NDK_HOME $SDK_HOME
+
+# Compiler Archives
+unzip -qq [% c("input_files_by_name/android_sdk_tools") %] -d $SDK_HOME
+unzip -qq [% c("input_files_by_name/android_ndk_compiler")%] -d $NDK_HOME
+
+# NDK Archive
+# Adjust cross compilation prefix for armv7a. Unfortunately, the compiler cross
+# compilation prefix and the one for all the other tools differ. Let's fix that
+# so we only have to take care of one. See: #33557 (comment 2674649).
+cd $NDK_HOME/android-ndk-r[% c("var/android_ndk_version") %][% c("var/android_ndk_revision") %]/toolchains/llvm/prebuilt/linux-x86_64/bin
+for f in `ls arm-linux-androideabi-*`; do
+  ln -s $f ${f//arm-linux-androideabi/armv7a-linux-androideabi}
+done
+
+# Tool Archives
+cd $SDK_HOME
+unzip -qq $HOME/[% c("input_files_by_name/build_tools") %] -d $SDK_HOME
+mkdir -p build-tools/[% c("var/version_30") %]
+mv $android_release_dir_11/* build-tools/[% c("var/version_30") %]
+
+unzip -qq $HOME/[% c("input_files_by_name/platform") %] -d $SDK_HOME
+mkdir -p platforms/android-[% c("var/android_api_level") %]
+mv $android_release_dir_11/* platforms/android-[% c("var/android_api_level") %]
+
+# Apart from GeckoView all other projects do still need build-tools 28.0.3 as
+# they are using the Gradle plugin 3.2.1 - 3.6.0 without specifying
+# `buildToolsVersion`.
+unzip -qq $HOME/[% c("input_files_by_name/build_tools_28") %] -d $SDK_HOME
+mkdir -p build-tools/[% c("var/version_28") %]
+mv $android_release_dir_9/* build-tools/[% c("var/version_28") %]
+
+unzip -qq $HOME/[% c("input_files_by_name/build_tools_29") %] -d $SDK_HOME
+mkdir -p build-tools/[% c("var/version_29") %]
+mv $android_release_dir_10/* build-tools/[% c("var/version_29") %]
+
+unzip -qq $HOME/[% c("input_files_by_name/platform_29") %] -d $SDK_HOME
+mkdir -p platforms/android-[% c("var/android_api_level_29") %]
+mv $android_release_dir_10/* platforms/android-[% c("var/android_api_level_29") %]
+
+unzip -qq $HOME/[% c("input_files_by_name/platform_tools") %] -d $SDK_HOME
+
+# That's a quirk required by GeckoView but let's have it here instead of in the
+# project's build script
+mkdir emulator
+cp tools/emulator emulator/
+
+# Cleanup
+rm -fR $android_release_dir_9 $android_release_dir_10 $android_release_dir_11
+
+# Archive dist directory
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

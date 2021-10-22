@@ -1,0 +1,211 @@
+- Remove the version_command, rpm, srpm, rpmbuild, rpmspec, rpm_rel,
+  debian_create, deb, deb_src, use_pbuilder, and debian_revision options,
+  as well as the rpmspec, rpm, srpm, deb-src, deb, pkg, and the publish
+  commands. All of these features can still be implemented externally.
+
+- Add the target_append and target_prepend input_files options
+
+- Add the build_log_append option
+
+- Add the rbm_tmp_dir option
+
+- Add the input_files_paths option
+
+- Add the ENV option
+
+- Add the build_log option
+
+- Add support for optional local configuration file rbm.local.conf
+
+- add the git_submodule option
+
+- add the hg_opt option
+
+- remove support for distributions configuration. This feature made
+  lookup of options 3 or 4 times slower, and is not very useful. The
+  targets feature should be used instead.
+
+- project is renamed to rbm (Reproducible Build Manager)
+
+- Add an options argument to the exec function
+
+- Add support for targets.
+
+- Add the pkg command
+
+- Add the publish command
+
+- Add the tmp_dir option, to select the directory used for temporary
+  files such as build directory
+
+- Add the pc function in templates, a function to access config value
+  from an other project
+
+- rpm build: define _rpmfilename macro to remove the leading %{ARCH}
+  directory
+
+- Add support for external input files, documented in burps_input_files(7)
+
+- Add the abbrev and abbrev_length options
+
+- Add the tar option, to create deterministic tar files
+
+- Add the debug mode: open a shell in the temporary build directory in
+  case of build failure
+
+- Add the arch option
+
+- Add support for target aliases and extensions
+
+- Add input_files_by_name option
+
+- Add the zip option, to create deterministic zip files
+
+- Add the remote_chroot option
+
+- Add the step option
+
+- Add a syntax to set a target only for a specific project
+
+- Add a sha256 function in templates
+
+- Add support for config based on current step
+
+- The remote/[script_name]/exec option is replaced by the remote_exec
+  option. With the addition of steps configuration, it becomes useless
+  to have per step exec option.
+
+- Add support for pre and post scripts, to be run as root. Those scripts
+  can be used to install/remove build dependencies.
+
+- Add the install_package option, for use in scripts templates.
+
+- Add the fileparse function in templates
+
+- Add the build_id option
+
+- Add the remote_start and remote_finish options
+
+- Add support for remote builds using docker
+
+- Add an sha256file function in templates
+
+- Make environment variables available to templates
+
+- Add support for mercurial repositories
+
+- Change default remote_mktemp to use /var/tmp
+
+- the filename in input_files can now point to a directory
+
+
+Version 0.4
+
+- Move %default_config into a separate file
+
+- Add the shell_quote function in templates
+
+- It is now possible to run debian package builds on a remote host with
+  ssh.
+
+- Move all documentation to man pages
+
+- Add versioncmp function in templates
+
+- Make it possible to use perl syntax to define configuration, in any
+  of the configuration files
+
+- Add the 'as_array' option to the project_config function, which will
+  return all matching results as an array instead of only the first one.
+
+- Add automatic detection of running distribution using lsb_release
+
+- Add support for distributions configuration. It's now possible to
+  define options depending on the selected distributions.
+
+- Usage command now opens the corresponding man page
+
+
+Version 0.3
+
+- Make it possible to use templating in output_dir option
+
+- Use YAML::XS rather than YAML perl module
+
+- Add the tmpl function in templates
+
+- Fix lookup of '0' or empty options
+
+- It is now possible to put a function reference in the default
+  configuration. When accessing a configuration option (or one of the
+  elements in the path) that is a function, the function is executed
+  and the return of the function is used as the value. The function
+  takes as first argument the project's name, and on other arguments
+  the path to the config option.
+
+- The describe option is now a perl function. This allows us to remove
+  some explicit calls to the git_describe function, and make sure that
+  it is called any time the describe values are used. This makes the
+  "mkpkg showconf [project] rpmspec" command work in all cases (before
+  that there could be problems as the describe option was not set).
+
+- Add the deb-src command, to create a debian source package
+
+- Add optional system configuration file /etc/mkpkg.conf
+
+- Automatically create output_dir and git_clone_dir if they don't
+  already exist.
+
+- Add the deb command, to create a debian package. With the debsign_keyid
+  option to select the gpg id to sign the packages, and the use_pbuilder
+  option to select whether pbuilder should be used.
+
+- Add the rpm_rel option
+
+
+Version 0.2
+
+- The showconf command can now be used to display specific config for
+  a project.
+
+- All configuration options are now templates. The content of the rpm
+  spec file, and the build scripts are now configuration options which
+  by default use an include directive to include a template file.
+
+- Add the exit_error function in templates
+
+- Add the exec function in templates. This function takes a command as
+  argument, run it inside the sources tree and return the output. The
+  version option which was handled as a special case in the source code
+  to execute the command defined in version_command if it is defined is
+  now a normal option thanks to the exec function.
+
+- Add the fetch option, to tell whether new commits from remote git
+  repository should be fetched automatically.
+
+- Add the fetch command, to fetch new commits from a git repository
+
+- rpm build is now done using a script, with template in the rpmbuild
+  option, which can be customized if necessary.
+
+- Use commit time as modification time on source tarball and rpm spec
+  files. The timestamp option can be used to set this to an other value.
+
+- Add the path function in templates
+
+- Use a wrapper to run gpg from git. This allow us to use specific
+  keyring files for some projects. While doing this we add the
+  gpg_wrapper, gpg_keyring, gpg_keyring_dir, gpg_args, gpg_bin options.
+
+- It's now possible to filter good gpg keys IDs with tag_gpg_id and
+  commit_gpg_id with short or long IDs, or full fingerprint. Previously
+  it was done using short IDs only.
+
+- tag_gpg_id and commit_gpg_id can be set to 1 to accept signature from
+  any key in the keyring.
+
+
+Version 0.1
+
+- first version
+

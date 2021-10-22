@@ -1,0 +1,26 @@
+# vim: filetype=yaml sw=2
+version: 2.1.12
+git_url: https://github.com/libevent/libevent.git
+git_hash: 'release-[% c("version") %]-stable'
+tag_gpg_id: 1
+gpg_keyring: libevent.gpg
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  container:
+    use_container: 1
+  configure_opt_project: --disable-static
+
+targets:
+  osx-x86_64:
+    var:
+      arch_deps:
+        - faketime
+  android:
+    var:
+      configure_opt_project: --disable-shared
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'

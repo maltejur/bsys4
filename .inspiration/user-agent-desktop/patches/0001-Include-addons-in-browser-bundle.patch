@@ -1,0 +1,25 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Fri, 21 Aug 2020 13:35:37 +0200
+Subject: Include addons in browser bundle
+
+---
+ browser/extensions/moz.build | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
+index 1ab9167d87..ebdaad482a 100644
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -11,6 +11,9 @@ DIRS += [
+     "webcompat",
+     "report-site-issue",
+     "pictureinpicture",
++    "ghostery",
++    "ghostery-search",
++    "ghostery-newtab",
+ ]
+ 
+ if CONFIG["NIGHTLY_BUILD"]:
+-- 
+2.32.0
+

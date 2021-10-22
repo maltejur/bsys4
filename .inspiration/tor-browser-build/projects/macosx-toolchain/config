@@ -1,0 +1,37 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-1-[% c("var/build_id") %].tar.gz'
+version: 10.11
+var:
+  container:
+    use_container: 1
+  setup: |
+    mkdir -p /var/tmp/dist
+    tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
+    export sysrootdir=/var/tmp/dist/[% project %]/MacOSX10.11.sdk/
+    export clangdir=/var/tmp/dist/[% project %]/clang
+    export cctoolsdir=/var/tmp/dist/[% project %]/cctools/bin
+    export PATH="$clangdir/bin:$cctoolsdir:$PATH"
+    export LD_LIBRARY_PATH=/var/tmp/dist/[% project %]/clang/lib
+    export CC="$clangdir/bin/clang [% c('var/FLAGS') %]"
+    export LDFLAGS="[% c('var/LDFLAGS') %]"
+    export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
+
+input_files:
+  - project: container-image
+  - name: clang
+    project: clang
+  - name: cctools
+    project: cctools
+  - name: cmake
+    project: cmake
+  - name: ninja
+    project: ninja
+  # Instructions on how to create the SDK tarball can be found at:
+  # build/macosx/cross-mozconfig.common
+  - name: SDK
+    URL: 'https://people.torproject.org/~gk/mirrors/sources/MacOSX[% c("version") %].sdk.tar.bz2'
+    sha256sum: d11e410d757d023be66d2fe7eaa85a1d232da3ac04f177eff3d8b8275cd9ffca
+  - name: clang-source
+    project: clang-source
+  - filename: compiler-rt-cross-compile.patch
+  - filename: compiler-rt-no-codesign.patch

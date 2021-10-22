@@ -1,0 +1,38 @@
+In order to be able to do offline builds for mobile we need to collect and
+distribute Glean dependencies beforehand.[1]
+
+There are three steps involved in the process:
+  1) Finding out the `glean_parser` version
+  2) Downloading and verifying the dependencies, and creating the tarball
+  3) Pushing it to the sources mirror
+
+1)
+
+Running `make list_toolchain_updates-android-components` should tell
+you which version of `glean_parser` is needed.
+
+2)
+
+Update `steps/create_glean_deps_tarball/version` in `projects/glean/config`
+to the version from step 1 above.
+
+Run this command to generate the tarball:
+
+  make create_glean_deps_tarball
+
+There is no really good way (yet) to verify that `pip` gave us actually what we
+wanted. We can download `glean_parser` and its dependencies using a different
+network path, though, e.g. by using `torsocks`. Comparing the results of both
+downloads should yield the exact same binaries.
+
+If you want to use torsocks, you can use this command:
+
+  make create_glean_deps_tarball-with_torsocks
+
+3)
+
+Upload the compressed tarball to the sources mirror and update the SHA-256 sum of
+it as well as the `glean_parser` version in the respective projects.
+
+[1] See: https://bugzilla.mozilla.org/show_bug.cgi?id=1651662 for details.
+[2] https://github.com/mozilla/glean

@@ -1,0 +1,25 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 10 Sep 2020 09:32:48 +0200
+Subject: Remove bundled mozilla extensions
+
+---
+ browser/extensions/moz.build | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
+index ebdaad482a..5c0bfeacea 100644
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -5,9 +5,6 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ DIRS += [
+-    "doh-rollout",
+-    "formautofill",
+-    "screenshots",
+     "webcompat",
+     "report-site-issue",
+     "pictureinpicture",
+-- 
+2.32.0
+

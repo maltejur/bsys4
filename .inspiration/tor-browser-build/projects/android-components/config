@@ -1,0 +1,87 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_hash: '[% project %]-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-1-build1'
+git_url: https://gitlab.torproject.org/tpo/applications/android-components.git
+tag_gpg_id: 1
+gpg_keyring: torbutton.gpg
+variant: '[% IF c("var/release") %]Release[% ELSE %]Beta[% END %]'
+
+var:
+  android_components_version: 91.0.13
+  torbrowser_branch: 11.0
+  container:
+    use_container: 1
+  # This should be updated when the list of gradle dependencies is changed.
+  gradle_dependencies_version: 31
+  gradle_version: 6.6.1
+  glean_parser: 3.4.0
+  git_branch: '[% project %]-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-1'
+
+targets:
+  nightly:
+    git_hash: '[% c("var/git_branch") %]'
+    tag_gpg_id: 0
+
+input_files:
+  - project: container-image
+    pkg_type: build
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+    pkg_type: build
+  - project: gradle
+    name: gradle
+    pkg_type: build
+  - name: geckoview
+    project: geckoview
+    pkg_type: merge_aars
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: application-services
+    project: application-services
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: python
+    project: python
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
+    name: gradle-dependencies
+    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: git.patch
+  - filename: mavenLocal.patch
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - URL: https://people.torproject.org/~boklm/mirrors/sources/glean-wheels-[% c('var/glean_parser') %].tar.xz
+    name: glean
+    sha256sum: b74c9184dd2ee4c84a6e9766cd754cd07fc9be7233a1cdaa35bba6bd169beb75
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: gen_gradle_deps_file.sh
+    enable: '[% c("var/fetch_gradle_dependencies") %]'
+
+steps:
+  list_toolchain_updates:
+    git_url: https://github.com/mozilla-mobile/android-components.git
+    git_hash: releases/91.0
+    #tag_gpg_id: 0
+    var:
+      container:
+        use_container: 0
+      get_glean_version: |
+        #!/bin/bash
+        read -d '' p << 'EOF' || true
+        if (m/const\\sval\\smozilla_glean\\s=\\s"([^"]+)"/) {
+          print $1;
+          exit;
+        }
+        EOF
+        perl -ne "$p" < buildSrc/src/main/java/Dependencies.kt
+      glean_version: '[% exec(c("var/get_glean_version")) %]'
+    input_files:
+      - name: glean
+        project: glean
+        pkg_type: src
+
+  get_gradle_dependencies_list:
+    filename: 'gradle-dependencies-list-[% c("var/android_components_version") %].txt'
+    get_gradle_dependencies_list: '[% INCLUDE build %]'
+    git_hash: '[% c("var/git_branch") %]^{/Bug 40023: Stop PrivateNotificationService}'
+    var:
+      fetch_gradle_dependencies: 1

@@ -1,0 +1,90 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+filename: 'fenix-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-2-build1'
+git_url: https://gitlab.torproject.org/tpo/applications/fenix.git
+tag_gpg_id: 1
+gpg_keyring: torbutton.gpg
+variant: Beta
+
+var:
+  fenix_version: 91.2.0
+  torbrowser_branch: 11.0
+  git_branch: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-2'
+  copyright_year: '[% exec("git show -s --format=%ci").remove("-.*") %]'
+  container:
+    use_container: 1
+  # This should be updated when the list of gradle dependencies is changed.
+  gradle_dependencies_version: 32
+  gradle_version: 6.5.1
+  glean_parser: 3.4.0
+
+targets:
+  release:
+    variant: Release
+  nightly:
+    git_hash: '[% c("var/git_branch") %]'
+    tag_gpg_id: 0
+    variant: Nightly
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - project: gradle
+    name: gradle
+  - name: android-components
+    project: android-components
+  - name: application-services
+    project: application-services
+  - name: geckoview
+    project: geckoview
+    pkg_type: merge_aars
+  - name: python
+    project: python
+  - name: tba-translation
+    project: tba-translation
+  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
+    name: gradle-dependencies
+    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+  - URL: https://people.torproject.org/~boklm/mirrors/sources/glean-wheels-[% c('var/glean_parser') %].tar.xz
+    name: glean
+    sha256sum: b74c9184dd2ee4c84a6e9766cd754cd07fc9be7233a1cdaa35bba6bd169beb75
+  - filename: mavenLocal.patch
+  - project: tor-android-service
+    name: tor-android-service
+  - project: tor-onion-proxy-library
+    name: topl
+
+steps:
+  list_toolchain_updates:
+    git_url: https://github.com/mozilla-mobile/fenix.git
+    git_hash: releases_v91.0.0
+    #tag_gpg_id: 0
+    input_files: []
+    var:
+      container:
+        use_container: 0
+
+  get_gradle_dependencies_list:
+    git_hash: '[% c("var/git_branch") %]^{/Add Tor integration and UI}'
+    filename: 'gradle-dependencies-list-[% c("var/fenix_version") %].txt'
+    get_gradle_dependencies_list: '[% INCLUDE build %]'
+    var:
+      fetch_gradle_dependencies: 1
+    input_files:
+      - project: container-image
+        pkg_type: build
+      - filename: gen_gradle_deps_file.sh
+      - name: '[% c("var/compiler") %]'
+        project: '[% c("var/compiler") %]'
+        pkg_type: build
+      - project: gradle
+        name: gradle
+        pkg_type: build
+      - project: tor-android-service
+        name: tor-android-service
+        pkg_type: build
+      - project: tor-onion-proxy-library
+        name: topl
+        pkg_type: build

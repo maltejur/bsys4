@@ -1,0 +1,34 @@
+
+stages:          # List of stages for jobs, and their order of execution
+  - source
+  - distro
+  - deploy
+
+source-job:
+  stage: source
+  script:
+    - make -C source all
+  artifacts:
+    paths:
+      - source/librewolf-*.source.tar.gz
+
+debian10-job:
+  stage: distro
+  image: docker
+  services: 
+    - docker:dind
+  script:
+    - wget -q  "https://gitlab.com/stanzabird/bs3/-/raw/main/build/debian10/build.py"
+    - docker pull librewolf/bs3-buildenv-debian10
+    - mkdir work
+    - (cd work ; tar xf ../source/librewolf-*.source.tar.gz)
+    - cp -v build.py work/librewolf-*
+    - docker run --rm -v $(pwd)/work:/work:rw librewolf/bs3-buildenv-debian10 ls -l work
+    - docker run --rm -v $(pwd)/work:/work:rw librewolf/bs3-buildenv-debian10 python3 /work/librewolf-93.0/build.py
+  dependencies:
+    - source-job
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy
+  script:
+    - echo '[debug] running the deploy-job commands. This collects all previous artifacts and creates a release.'

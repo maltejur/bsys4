@@ -1,0 +1,42 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Wed, 30 Sep 2020 12:22:19 +0200
+Subject: Move Ghostery icon to UrlBar
+
+---
+ .../components/customizableui/CustomizableUI.jsm    | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/browser/components/customizableui/CustomizableUI.jsm b/browser/components/customizableui/CustomizableUI.jsm
+index b214f83579..bb6882f753 100644
+--- a/browser/components/customizableui/CustomizableUI.jsm
++++ b/browser/components/customizableui/CustomizableUI.jsm
+@@ -1114,7 +1114,12 @@ var CustomizableUIInternal = {
+         if (widget) {
+           widget.currentArea = aArea;
+         }
+-        this.insertWidgetBefore(node, currentNode, container, aArea);
++        if (node.getAttribute("data-extensionid") === "firefox@ghostery.com") {
++          const container = window.document.getElementById("urlbar-input-container");
++          container.insertAdjacentElement('afterbegin', node);
++        } else {
++          this.insertWidgetBefore(node, currentNode, container, aArea);
++        }
+         if (gResetting) {
+           this.notifyListeners("onWidgetReset", node, container);
+         } else if (gUndoResetting) {
+@@ -1547,6 +1552,12 @@ var CustomizableUIInternal = {
+       this.ensureButtonContextMenu(widgetNode, aAreaNode);
+     }
+ 
++    if (widgetNode.getAttribute("data-extensionid") === "firefox@ghostery.com") {
++      const container = window.document.getElementById("urlbar-input-container");
++      container.insertAdjacentElement('afterbegin', widgetNode);
++      return;
++    }
++
+     let [insertionContainer, nextNode] = this.findInsertionPoints(
+       widgetNode,
+       aAreaNode
+-- 
+2.32.0
+
