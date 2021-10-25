@@ -86,7 +86,7 @@ def get_objdir():
     return retval[0]
         
 
-def post_build():
+def post_build(is_macos=False):
     print('[debug] --- post_build stage ---------------------------------------')
     dirname = get_objdir()
 

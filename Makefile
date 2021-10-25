@@ -1,4 +1,4 @@
-.PHONY : all help clean veryclean check update build buildenv source artifacts
+.PHONY : all help clean veryclean check source buildenv build artifacts
 
 version_file=./version
 version:=$(shell cat $(version_file))
@@ -14,17 +14,18 @@ help :
 clean :
 	make -C source clean
 	make -C build/debian10 clean
+	make -C artifacts/debian10 clean
 
 veryclean : clean
 	make -C source veryclean
 	make -C build/debian10 veryclean
+	make -C artifacts/debian10 veryclean
 
 #
 # Keeping ./version up to date.
 #
 
-check : update
-update :
+check :
 	@python3 update-version.py
 
 #
@@ -62,5 +63,5 @@ build : source/librewolf-$(version).source.tar.gz
 #
 
 artifacts : 
-	make -C artifacts all
+	make -C artifacts/debian10 all
 
