@@ -3,7 +3,7 @@
 version_file=../../version
 version:=$(shell cat $(version_file))
 
-tag=librewolf/bs3-buildenv-debian10
+tag=librewolf/bs4-buildenv-debian10
 
 docker=sudo docker
 rm=sudo rm
@@ -19,11 +19,10 @@ clean :
 
 veryclean : clean
 
-build :
+build : ../../source/librewolf-$(version).source.tar.gz
 	$(docker) pull $(tag)
 	$(rm) -rf work
 	$(mkdir) work
-	(cd work ; $(tar) xf ../$< ; $(cp) ../build.py librewolf-$(version) ; cd ..)
+	(cd work ; $(tar) xf ../$< && $(cp) ../build.py librewolf-$(version) ; cd ..)
 	$(chown) -R root:root work
 	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build.py
-	$(rm) -rf work

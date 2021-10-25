@@ -1,4 +1,4 @@
-tag=librewolf/bs3-buildenv-debian10
+tag=librewolf/bs4-buildenv-debian10
 
 all : build
 
