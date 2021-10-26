@@ -18,12 +18,15 @@ clean :
 	$(rm) -rf work
 
 veryclean : clean
+	-$(docker) rmi $(tag)
 
 work : ../../source/librewolf-$(version).source.tar.gz
+	$(rm) -rf work
 	$(mkdir) work
-	(cd work ; $(tar) xf ../$< && $(cp) ../build.py librewolf-$(version) ; cd ..)
+	(cd work && $(tar) xf ../$< && cd ..)
 	$(chown) -R root:root work
 
 build : work
 	$(docker) pull $(tag)
-	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build.py
+	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build-librewolf.py
+	cp -v work/librewolf-$(version)/obj-x86_64-pc-linux-gnu/dist/firefox-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/debian10

@@ -1,4 +1,4 @@
-.PHONY : all help clean veryclean check source buildenv build artifacts purge
+.PHONY : all help clean veryclean check source buildenv build artifacts purge init
 
 version_file=./version
 version:=$(shell cat $(version_file))
@@ -6,7 +6,13 @@ version:=$(shell cat $(version_file))
 
 docker=sudo docker
 
-all : source build artifacts
+all : source
+	make debian10
+	make -C build/debian10 veryclean # reclaim disk space
+
+debian10 :
+	make -C build/debian10 all # perform ./mach build && ./mach package
+	make -C artifacts/debian10 all # make final artifacts
 
 help :
 	@echo "use: make all help clean veryclean check build buildenv artifacts"
@@ -71,3 +77,12 @@ build :
 artifacts : 
 	make -C artifacts/debian10 all
 
+
+#
+# init: run bootstrap on local machine
+#
+
+init :
+	wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
+	python3 bootstrap.py --no-interactive --application-choice=browser
+	rm -rf bootstrap.py mozilla-unified

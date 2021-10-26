@@ -105,17 +105,17 @@ def post_build(is_macos=False):
     exec('rm -rf settings')
 
     # maybe a wget -q ?
-    exec('git clone https://gitlab.com/librewolf-community/windows.git')
-    patch('windows/patches/package-manifest.patch')
-    exec('rm -rf settings')
+    if not os.path.exists('package-manifest.patch'):
+        exec('wget -q https://gitlab.com/librewolf-community/browser/windows/-/raw/master/patches/package-manifest.patch')
+        patch('package-manifest.patch')
+        exec('rm -f package-manifest.patch')
+        
     print('--- post_build stage [done] ---------------------------------------')
 
 
 
-# my build folder will be:
-script = os.path.realpath(__file__)
-build_folder = os.path.dirname(script)
-enter_srcdir(build_folder)
+# my build folder will be here:
+enter_srcdir(os.path.dirname(os.path.realpath(__file__)))
 
 # perform the build
 exec('./mach build')

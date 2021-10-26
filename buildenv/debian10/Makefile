@@ -7,7 +7,7 @@ all : build
 
 clean :
 veryclean : clean
-	$(docker) rmi $(tag)
+	-$(docker) rmi $(tag)
 
 build :
 	$(docker) build -t $(tag) .
