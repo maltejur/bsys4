@@ -19,10 +19,11 @@ clean :
 
 veryclean : clean
 
-build : ../../source/librewolf-$(version).source.tar.gz
-	$(docker) pull $(tag)
-	$(rm) -rf work
+work : ../../source/librewolf-$(version).source.tar.gz
 	$(mkdir) work
 	(cd work ; $(tar) xf ../$< && $(cp) ../build.py librewolf-$(version) ; cd ..)
 	$(chown) -R root:root work
+
+build : work
+	$(docker) pull $(tag)
 	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build.py
