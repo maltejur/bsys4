@@ -1,14 +1,21 @@
+.PHONY : all clean veryclean build no-cache upload push
+
 tag=librewolf/bs4-buildenv-debian10
+docker=sudo docker
 
 all : build
 
+clean :
+veryclean : clean
+	$(docker) rmi $(tag)
+
 build :
-	sudo docker build -t $(tag) .
+	$(docker) build -t $(tag) .
 
 no-cache :
-	sudo docker build -t $(tag) .
+	$(docker) build --no-cache -t $(tag) .
 
 upload : push
 
 push : build
-	sudo docker push $(tag)
+	$(docker) push $(tag)
