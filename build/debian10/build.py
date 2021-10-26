@@ -87,7 +87,7 @@ def get_objdir():
 
 
 def post_build(is_macos=False):
-    print('[debug] --- post_build stage ---------------------------------------')
+    print('--- post_build stage [init] ---------------------------------------')
     dirname = get_objdir()
 
     distfolder = "dist/bin"
@@ -104,9 +104,11 @@ def post_build(is_macos=False):
     exec("cp -v settings/librewolf.cfg {}/{}/".format(dirname,distfolder))
     exec('rm -rf settings')
 
+    # maybe a wget -q ?
     exec('git clone https://gitlab.com/librewolf-community/windows.git')
     patch('windows/patches/package-manifest.patch')
     exec('rm -rf settings')
+    print('--- post_build stage [done] ---------------------------------------')
 
 
 

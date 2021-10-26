@@ -9,7 +9,7 @@ docker=sudo docker
 rm=sudo rm
 mkdir=sudo mkdir
 tar=sudo tar
-cp=sudo cp
+cp=sudo cp -v
 chown=sudo chown
 
 all : build
