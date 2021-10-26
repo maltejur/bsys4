@@ -87,7 +87,7 @@ else:
     s = base_version
     
 if s != base_version:
-    print('Updated to version {}.'.format(s))
+    print('The wheel has turned. Version {} released.'.format(s))
 
     with open('./version', 'w') as f:
         f.write(s)

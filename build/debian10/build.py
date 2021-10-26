@@ -84,7 +84,7 @@ def get_objdir():
         print("fatal error: in execute_lw_post_build(): cannot glob build output folder '{}'".format(pattern))
         script_exit(1)
     return retval[0]
-        
+
 
 def post_build(is_macos=False):
     print('[debug] --- post_build stage ---------------------------------------')
@@ -102,6 +102,10 @@ def post_build(is_macos=False):
     exec("cp -v settings/defaults/pref/local-settings.js {}/{}/defaults/pref/".format(dirname,distfolder))
     exec("cp -v settings/distribution/policies.json {}/{}/distribution/".format(dirname,distfolder))
     exec("cp -v settings/librewolf.cfg {}/{}/".format(dirname,distfolder))
+    exec('rm -rf settings')
+
+    exec('git clone https://gitlab.com/librewolf-community/windows.git')
+    patch('windows/patches/package-manifest.patch')
     exec('rm -rf settings')
 
 
