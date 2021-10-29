@@ -60,7 +60,7 @@ debian10 :
 #
 
 check :
-	@python3 update-version.py
+	@python3 assets/update-version.py
 
 
 #
