@@ -1,7 +1,8 @@
 .PHONY : all clean veryclean build no-cache upload push
 
 tag=librewolf/bs4-buildenv-debian10
-docker=sudo docker
+
+include ../../assets/Makefile.includes
 
 all : build
 
