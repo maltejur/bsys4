@@ -110,7 +110,6 @@ def post_build(is_macos=False):
     if not os.path.exists('package-manifest.patch'):
         exec('wget -q https://gitlab.com/librewolf-community/browser/windows/-/raw/master/patches/package-manifest.patch')
         patch('package-manifest.patch')
-        exec('rm -f package-manifest.patch')
         
     print('--- post_build stage [done] ---------------------------------------')
 
@@ -134,6 +133,6 @@ exec('./mach package')
 ## copy the artifact from obj-* to a friendlier location... to: /work
 version = sys.argv[1]
 _dirname = get_objdir()
-artifact = "{}/dist/firefox-{}.en-US.linux-x86_64.tar.bz2".format(_dirname,version)
+artifact = "{}/dist/librewolf-{}.en-US.linux-x86_64.tar.bz2".format(_dirname,version)
 cmd = "cp -v {} .".format(artifact)
 exec(cmd)

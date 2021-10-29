@@ -21,4 +21,4 @@ work : ../../source/librewolf-$(version).source.tar.gz
 build : work
 	$(docker) pull $(tag)
 	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build-librewolf.py $(version)
-	cp -v work/librewolf-$(version)/firefox-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
+	cp -v work/librewolf-$(version)/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
