@@ -125,14 +125,15 @@ enter_srcdir(os.path.dirname(os.path.realpath(__file__)))
 
 
 
-## perform the build
+
+# perform the build
 exec('./mach build')
 post_build()
 exec('./mach package')
 
-## copy the artifact to a friendlier location... to: /work
+## copy the artifact from obj-* to a friendlier location... to: /work
 version = sys.argv[1]
 _dirname = get_objdir()
-artifact = "librewolf-{}/{}/dist/firefox-{}.en-US.linux-x86_64.tar.bz2".format(version,_dirname,version)
-cmd = "cp -v {} /work".format(artifact)
+artifact = "{}/dist/firefox-{}.en-US.linux-x86_64.tar.bz2".format(_dirname,version)
+cmd = "cp -v {} .".format(artifact)
 exec(cmd)
