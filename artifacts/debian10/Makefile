@@ -2,7 +2,7 @@ distro=debian10
 
 include ../../assets/Makefile.includes
 
-.PHONY : all clean veryclean
+.PHONY : all clean veryclean pub
 
 version_file=../../version
 version:=$(shell cat $(version_file))
@@ -10,15 +10,20 @@ version:=$(shell cat $(version_file))
 tag=librewolf/bs4-buildenv-$(distro)
 
 build-artifact=librewolf-$(version).en-US.linux-x86_64.tar.bz2
-output=librewolf-$(version).en-US.$(distro)-x86_64.deb
+output=librewolf-$(version).en-US.$(distro).x86_64.deb
 
 all : $(output)
 
 clean :
-	$(rm) -rf work $(output)
+	$(rm) -rf work
 
 veryclean : clean
-	rm -f $(build-artifact)
+	rm -f $(build-artifact) $(output)
+
+# pub
+pub : $(output)
+	-mkdir -p ../../pub/librewolf/librewolf-$(version)
+	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
 
 $(output) : $(build-artifact)
 	$(rm) -rf work
@@ -27,6 +32,7 @@ $(output) : $(build-artifact)
 	cp -v build-deb.sh work
 	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-deb.sh $(version)
 	cp -v work/librewolf.deb $(output)
+	$(rm) -rf work
 
 $(build-artifact) :
 	@echo "Error: Please use 'make $(distro)' at top-level to build first."
