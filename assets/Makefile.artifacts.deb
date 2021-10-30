@@ -1,4 +1,4 @@
-.PHONY : all clean veryclean pub
+.PHONY : all clean veryclean pub shell
 
 version_file=../../version
 version:=$(shell cat $(version_file))
@@ -21,15 +21,20 @@ pub : $(output)
 	-mkdir -p ../../pub/librewolf/librewolf-$(version)
 	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
 
-$(output) : $(build-artifact)
+$(output) : work
+	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-deb.sh $(version)
+	cp -v work/librewolf.deb $(output)
+
+work : $(build-artifact)
 	$(rm) -rf work
 	mkdir work
 	(cd work && tar xf ../$(build-artifact))
 	cp -v ../../assets/build-deb.sh work
-	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-deb.sh $(version)
-	cp -v work/librewolf.deb $(output)
-	$(rm) -rf work
 
 $(build-artifact) :
-	@echo "Error: Please use 'make $(distro)' at top-level to build first."
-	false
+	@(echo "Error: Please use 'make $(distro)' at top-level to build first." && false)
+
+
+shell : work
+	$(docker) pull $(tag)
+	$(docker) run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash

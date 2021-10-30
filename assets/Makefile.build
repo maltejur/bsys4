@@ -1,4 +1,4 @@
-.PHONY : all clean veryclean build
+.PHONY : all clean veryclean build shell
 
 version_file=../../version
 version:=$(shell cat $(version_file))
@@ -22,3 +22,7 @@ build : work
 	$(docker) pull $(tag)
 	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build-librewolf.py $(version)
 	cp -v work/librewolf-$(version)/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
+
+shell : work
+	$(docker) pull $(tag)
+	$(docker) run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash

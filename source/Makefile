@@ -1,16 +1,16 @@
-.PHONY : all help clean veryclean fetch extract librewolf-patches
+.PHONY : all help clean veryclean fetch extract librewolf-patches pub
 version_file=../version
 version:=$(shell cat $(version_file))
 
 all : librewolf-$(version).source.tar.gz
 
 help :
-	@echo "Use: make [all] [clean] [veryclean]"
+	@echo "Use: make [all] [clean] [veryclean] [pub]"
 	@echo ""
 	@echo "  all           - build librewolf-$(version).source.tar.gz"
 	@echo "  clean         - remove all source trees and other cruft"
 	@echo "  veryclean     - same as clean, but also remove source archives"
-	@echo ""
+	@echo "  pub           - copy Libewolf source to pub folder"
 
 clean :
 	rm -rf *~ firefox-$(version) librewolf-$(version) librewolf-$(version).source.tar.gz 
@@ -39,3 +39,7 @@ librewolf-$(version).source.tar.gz : firefox-$(version).source.tar.xz $(version_
 	rm -f librewolf-$(version).source.tar.gz
 	tar cfz librewolf-$(version).source.tar.gz librewolf-$(version)
 	rm -rf librewolf-$(version)
+
+pub : librewolf-$(version).source.tar.gz
+	cp -v $< ../pub/librewolf/librewolf-$(version)
+

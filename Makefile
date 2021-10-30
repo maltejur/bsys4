@@ -7,18 +7,19 @@ include assets/Makefile.includes
 
 help :
 	@echo "use: make [all] [clean] [veryclean] [check]"
-	@echo "          [source] [buildenv] [build] [artifacts] [pub]"
+	@echo "          [source] [pub] [buildenv] [no-cache] [upload]"
 	@echo "          [purge] [prune] [init]"
 	@echo ""
-	@echo "  all         - make source build artifacts pub"
+	@echo "  all         - do: make source [build-all] artifacts pub"
 	@echo "  clean       - clean the biggest folders and intermediate results."
 	@echo "  veryclean   - clean everything, including sources and artifacts."
 	@echo "  check       - check if there is a new version of Firefox."
 	@echo ""
 	@echo "  source      - create the source tarball."
 	@echo ""
-	@echo "  build       - actually build the browser"
-	@echo "  artifacts   - transform the build artifact to OS specific format."
+	@echo "  debian10    - build the browser for debian10."
+	@echo "  debian11    - build the browser for debian11."
+	@echo ""
 	@echo "  pub         - copy the final artifact to the pub/librewolf tree."
 	@echo ""
 	@echo "  buildenv    - 'docker build' the images needed for building."
@@ -32,12 +33,17 @@ clean :
 	make -C source clean
 	make -C build/debian10 clean
 	make -C artifacts/debian10 clean
+	make -C build/debian11 clean
+	make -C artifacts/debian11 clean
 
 veryclean : # deliberately not depending on 'clean' in this case.
 	make -C source veryclean
 	make -C buildenv/debian10 veryclean
 	make -C build/debian10 veryclean
 	make -C artifacts/debian10 veryclean
+	make -C buildenv/debian11 veryclean
+	make -C build/debian11 veryclean
+	make -C artifacts/debian11 veryclean
 
 
 #
@@ -49,10 +55,16 @@ all : source
 	make debian10
 	make -C artifacts/debian10 pub
 	make -C build/debian10 veryclean # reclaim disk space
+	make debian11
+	make -C artifacts/debian11 pub
+	make -C build/debian11 veryclean # reclaim disk space
 
 debian10 :
 	make -C build/debian10 all # perform ./mach build && ./mach package
 	make -C artifacts/debian10 all # make final artifacts
+debian11 :
+	make -C build/debian11 all # perform ./mach build && ./mach package
+	make -C artifacts/debian11 all # make final artifacts
 
 
 #
@@ -77,12 +89,25 @@ source :
 
 buildenv :
 	make -C buildenv/debian10 build
+	make -C buildenv/debian11 build
 
 no-cache :
 	make -C buildenv/debian10 no-cache
+	make -C buildenv/debian11 no-cache
 
 upload :
 	make -C buildenv/debian10 upload
+	make -C buildenv/debian11 upload
+
+
+#
+# pub
+#
+
+pub :
+	make -C source pub
+	make -C artifacts/debian10 pub
+	make -C artifacts/debian11 pub
 
 
 #
@@ -92,25 +117,6 @@ upload :
 purge : prune
 prune :
 	$(docker) system prune --all --force
-
-
-#
-# build: Building the mozilla tree and artifact
-#
-
-build :
-	make -C build/debian10 build
-
-#
-# artifacts
-#
-
-artifacts : 
-	make -C artifacts/debian10 all
-
-
-pub :
-	make -C artifacts/debian10 pub
 
 
 #
