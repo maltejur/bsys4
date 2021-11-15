@@ -13,7 +13,7 @@ help :
 	@echo "  pub           - copy Libewolf source to pub folder"
 
 clean :
-	rm -rf *~ firefox-$(version) librewolf-$(version) librewolf-$(version).source.tar.gz 
+	rm -rf *~ firefox-$(version) librewolf-$(version) librewolf-$(version).source.tar.gz work
 
 veryclean : clean
 	rm -f firefox-$(version).source.tar.xz
@@ -31,7 +31,7 @@ librewolf-patches :
 	python3 ../assets/librewolf-patches.py $(version)
 	rm -rf work
 
-librewolf-$(version).source.tar.gz : firefox-$(version).source.tar.xz $(version_file) ../assets/librewolf-patches.py ../assets/build-librewolf.py ../assets/mozconfig
+librewolf-$(version).source.tar.gz : firefox-$(version).source.tar.xz $(version_file) ../assets/librewolf-patches.py ../assets/build-librewolf.py ../assets/mozconfig ../assets/patches-$(version).txt
 	rm -rf firefox-$(version) librewolf-$(version)
 	tar xf firefox-$(version).source.tar.xz
 	mv firefox-$(version) librewolf-$(version)

@@ -72,7 +72,6 @@ def librewolf_patches():
     enter_srcdir('work')
     exec('git clone --recursive https://gitlab.com/librewolf-community/browser/windows.git')
     exec('git clone --recursive https://gitlab.com/librewolf-community/browser/common.git')
-    exec('git clone --recursive https://gitlab.com/librewolf-community/settings.git')
     leave_srcdir()
 
     enter_srcdir()
@@ -83,21 +82,14 @@ def librewolf_patches():
     exec("cp -vr ../work/common/source_files/browser .")
     exec("cp -v ../work/windows/files/configure.sh browser/branding/librewolf")
 
-    patches = [
-        "../work/common/patches/about-dialog.patch",
-        "../work/common/patches/allow_dark_preference_with_rfp.patch",
-        "../work/common/patches/context-menu.patch",
-        "../work/common/patches/megabar.patch",
-        "../work/common/patches/mozilla-vpn-ad.patch",
-        "../work/common/patches/remove_addons.patch",
-        "../work/common/patches/search-config.patch",
-        
-        # sed patches..
-        "../work/common/patches/sed-patches/allow-searchengines-non-esr.patch",
-        "../work/common/patches/sed-patches/disable-pocket.patch",
-        "../work/common/patches/sed-patches/remove-internal-plugin-certs.patch",
-        "../work/common/patches/sed-patches/stop-undesired-requests.patch",
-    ]
+    # read lines of .txt file into 'patches'
+    f = open('../../assets/patches-{}.txt'.format(version), "r")
+    lines = f.readlines()
+    f.close()
+    patches = []
+    for line in lines:
+        patches.append('../work/common/'+line)
+
         
     for p in patches:
         patch(p)
