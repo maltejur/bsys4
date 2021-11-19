@@ -1,7 +1,4 @@
-/source/firefox-*.source.tar.xz
-/source/librewolf-*.source.tar.gz
-/source/librewolf-*
-/source/work
 /.vscode
 /pub
-/artifacts/debian10/librewolf-*.en-US.linux-x86_64.tar.bz2
+/source/firefox-*.source.tar.xz
+/source/librewolf-*.source.tar.gz
