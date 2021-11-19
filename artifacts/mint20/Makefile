@@ -1,3 +1,3 @@
-distro=debian11
+distro=mint20
 include ../../assets/Makefile.includes
 include ../../assets/Makefile.artifacts.deb
