@@ -20,6 +20,7 @@ help :
 	@echo "  debian10    - build the browser for debian10."
 	@echo "  debian11    - build the browser for debian11."
 	@echo "  mint20      - build the browser for mint20."
+	@echo "  ubuntu20    - build the browser for mint20."
 	@echo ""
 	@echo "  pub         - copy the final artifact to the pub/librewolf tree."
 	@echo ""
@@ -42,6 +43,9 @@ clean :
 	make -C build/mint20 clean
 	make -C artifacts/mint20 clean
 
+	make -C build/ubuntu20 clean
+	make -C artifacts/ubuntu20 clean
+
 veryclean : # deliberately not depending on 'clean' in this case.
 	make -C source veryclean
 
@@ -56,6 +60,10 @@ veryclean : # deliberately not depending on 'clean' in this case.
 	make -C buildenv/mint20 veryclean
 	make -C build/mint20 veryclean
 	make -C artifacts/mint20 veryclean
+
+	make -C buildenv/ubuntu20 veryclean
+	make -C build/ubuntu20 veryclean
+	make -C artifacts/ubuntu20 veryclean
 
 
 #
@@ -78,6 +86,10 @@ all : source
 	make -C artifacts/mint20 pub
 	make -C build/mint20 veryclean # reclaim disk space
 
+	make ubuntu20
+	make -C artifacts/ubuntu20 pub
+	make -C build/ubuntu20 veryclean # reclaim disk space
+
 debian10 :
 	make -C build/debian10 all # perform ./mach build && ./mach package
 	make -C artifacts/debian10 all # make final artifacts
@@ -89,6 +101,10 @@ debian11 :
 mint20 :
 	make -C build/mint20 all # perform ./mach build && ./mach package
 	make -C artifacts/mint20 all # make final artifacts
+
+ubuntu20 :
+	make -C build/ubuntu20 all # perform ./mach build && ./mach package
+	make -C artifacts/ubuntu20 all # make final artifacts
 
 
 #
@@ -115,16 +131,17 @@ buildenv :
 	make -C buildenv/debian10 build
 	make -C buildenv/debian11 build
 	make -C buildenv/mint20 build
+	make -C buildenv/ubuntu20 build
 
 no-cache :
 	make -C buildenv/debian10 no-cache
 	make -C buildenv/debian11 no-cache
-	make -C buildenv/mint20 no-cache
+	make -C buildenv/ubuntu20 no-cache
 
 upload :
 	make -C buildenv/debian10 upload
 	make -C buildenv/debian11 upload
-	make -C buildenv/mint20 upload
+	make -C buildenv/ubuntu20 upload
 
 
 #
@@ -136,6 +153,7 @@ pub :
 	make -C artifacts/debian10 pub
 	make -C artifacts/debian11 pub
 	make -C artifacts/mint20 pub
+	make -C artifacts/ubuntu20 pub
 
 
 #
