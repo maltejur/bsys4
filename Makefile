@@ -64,6 +64,8 @@ veryclean : # deliberately not depending on 'clean' in this case.
 #
 
 all : source
+	make -C source pub
+
 	make debian10
 	make -C artifacts/debian10 pub
 	make -C build/debian10 veryclean # reclaim disk space
