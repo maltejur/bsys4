@@ -1,5 +1,7 @@
-# which distro we want to build this?
+# variable: which distro we want to build this?
 distro=debian11
+
+# .. the rest is the same for all distro's
 
 docker=sudo docker
 rm=sudo rm

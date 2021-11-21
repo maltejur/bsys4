@@ -3,7 +3,7 @@
 version_file=./version
 version:=$(shell cat $(version_file))
 
-include assets/Makefile.includes
+include scripts/Makefile.includes
 
 help :
 	@echo "use: make [all] [clean] [veryclean] [check]"
@@ -15,14 +15,14 @@ help :
 	@echo "  veryclean   - clean everything, including sources and artifacts."
 	@echo "  check       - check if there is a new version of Firefox."
 	@echo ""
-	@echo "  source      - create the source tarball."
+	@echo "  source      - create the source tarball. ( WGET source tarball )"
 	@echo ""
 	@echo "  debian10    - build the browser for debian10."
 	@echo "  debian11    - build the browser for debian11."
 	@echo "  mint20      - build the browser for mint20."
 	@echo "  ubuntu20    - build the browser for mint20."
 	@echo ""
-	@echo "  pub         - copy the final artifact to the pub/librewolf tree."
+	@echo "  pub         - copy the final artifacts to the pub/librewolf tree."
 	@echo ""
 	@echo "  buildenv    - 'docker build' the images needed for building."
 	@echo "  no-cache    - 'docker build --no-cache' the images."
@@ -172,4 +172,4 @@ prune :
 init :
 	wget -q "https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py"
 	python3 bootstrap.py --no-interactive --application-choice=browser
-	rm -rf bootstrap.py mozilla-unified
+	rm -rf bootstrap.py

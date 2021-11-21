@@ -1,3 +1,3 @@
 distro=mint20
-include ../../assets/Makefile.includes
-include ../../assets/Makefile.artifacts.deb
+include ../../scripts/Makefile.includes
+include ../../scripts/Makefile.artifacts.deb
