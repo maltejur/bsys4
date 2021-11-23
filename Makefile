@@ -112,7 +112,7 @@ ubuntu20 :
 #
 
 check :
-	@python3 assets/update-version.py
+	@python3 scripts/update-version.py
 
 
 #

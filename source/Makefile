@@ -28,10 +28,10 @@ firefox-$(version).source.tar.xz :
 # we take this extra step seperatly because it's so important.
 librewolf-patches :
 	rm -rf work && mkdir -p work
-	python3 ../assets/librewolf-patches.py $(version)
+	python3 ../scripts/librewolf-patches.py $(version)
 	rm -rf work
 
-librewolf-$(version).source.tar.gz : firefox-$(version).source.tar.xz $(version_file) ../assets/librewolf-patches.py ../assets/build-librewolf.py ../assets/mozconfig ../assets/patches-$(version).txt
+librewolf-$(version).source.tar.gz : firefox-$(version).source.tar.xz $(version_file) ../scripts/librewolf-patches.py ../scripts/build-librewolf.py ../scripts/mozconfig ../scripts/patches-$(version).txt
 	rm -rf firefox-$(version) librewolf-$(version)
 	tar xf firefox-$(version).source.tar.xz
 	mv firefox-$(version) librewolf-$(version)

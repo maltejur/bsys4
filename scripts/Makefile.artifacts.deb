@@ -30,7 +30,7 @@ work : $(build-artifact)
 	$(rm) -rf work
 	mkdir work
 	(cd work && tar xf ../$(build-artifact))
-	cp -v ../../assets/build-deb.sh work
+	cp -v ../../scripts/build-deb.sh work
 
 $(build-artifact) :
 	@(echo "Error: Please use 'make $(distro)' at top-level to build first." && false)
