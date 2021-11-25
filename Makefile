@@ -17,10 +17,12 @@ help :
 	@echo ""
 	@echo "  source      - create the source tarball. ( WGET source tarball )"
 	@echo ""
-	@echo "  debian10    - build the browser for debian10."
-	@echo "  debian11    - build the browser for debian11."
-	@echo "  mint20      - build the browser for mint20."
-	@echo "  ubuntu20    - build the browser for mint20."
+	@echo "  debian10    - build the browser for Debian 10."
+	@echo "  debian11    - build the browser for Debian 11."
+	@echo "  mint20      - build the browser for Mint 20."
+	@echo "  ubuntu20    - build the browser for Ubuntu 20."
+	@echo "  fedora34    - build the browser for Fedora 34."
+	@echo "  fedora35    - build the browser for Fedora 35."
 	@echo ""
 	@echo "  pub         - copy the final artifacts to the pub/librewolf tree."
 	@echo ""
@@ -46,6 +48,12 @@ clean :
 	make -C build/ubuntu20 clean
 	make -C artifacts/ubuntu20 clean
 
+	make -C build/fedora34 clean
+	make -C artifacts/fedora34 clean
+
+	make -C build/fedora35 clean
+	make -C artifacts/ubuntu35 clean
+
 veryclean : # deliberately not depending on 'clean' in this case.
 	make -C source veryclean
 
@@ -64,6 +72,14 @@ veryclean : # deliberately not depending on 'clean' in this case.
 	make -C buildenv/ubuntu20 veryclean
 	make -C build/ubuntu20 veryclean
 	make -C artifacts/ubuntu20 veryclean
+
+	make -C buildenv/fedora34 veryclean
+	make -C build/fedora34 veryclean
+	make -C artifacts/fedora34 veryclean
+
+	make -C buildenv/fedora35 veryclean
+	make -C build/fedora35 veryclean
+	make -C artifacts/fedora35 veryclean
 
 
 #
@@ -90,6 +106,14 @@ all : source
 	make -C artifacts/ubuntu20 pub
 	make -C build/ubuntu20 veryclean # reclaim disk space
 
+	make fedora34
+	make -C artifacts/fedora34 pub
+	make -C build/fedora35 veryclean # reclaim disk space
+
+	make fedora35
+	make -C artifacts/fedora35 pub
+	make -C build/fedora35 veryclean # reclaim disk space
+
 debian10 :
 	make -C build/debian10 all # perform ./mach build && ./mach package
 	make -C artifacts/debian10 all # make final artifacts
@@ -105,6 +129,14 @@ mint20 :
 ubuntu20 :
 	make -C build/ubuntu20 all # perform ./mach build && ./mach package
 	make -C artifacts/ubuntu20 all # make final artifacts
+
+fedora34 :
+	make -C build/fedora34 all # perform ./mach build && ./mach package
+	make -C artifacts/fedora34 all # make final artifacts
+
+fedora35 :
+	make -C build/fedora35 all # perform ./mach build && ./mach package
+	make -C artifacts/fedora35 all # make final artifacts
 
 
 #
@@ -132,16 +164,22 @@ buildenv :
 	make -C buildenv/debian11 build
 	make -C buildenv/mint20 build
 	make -C buildenv/ubuntu20 build
+	make -C buildenv/fedora34 build
+	make -C buildenv/fedora35 build
 
 no-cache :
 	make -C buildenv/debian10 no-cache
 	make -C buildenv/debian11 no-cache
 	make -C buildenv/ubuntu20 no-cache
+	make -C buildenv/fedora34 no-cache
+	make -C buildenv/fedora35 no-cache
 
 upload :
 	make -C buildenv/debian10 upload
 	make -C buildenv/debian11 upload
 	make -C buildenv/ubuntu20 upload
+	make -C buildenv/fedora34 upload
+	make -C buildenv/fedora35 upload
 
 
 #
@@ -154,6 +192,8 @@ pub :
 	make -C artifacts/debian11 pub
 	make -C artifacts/mint20 pub
 	make -C artifacts/ubuntu20 pub
+	make -C artifacts/fedora34 pub
+	make -C artifacts/fedora35 pub
 
 
 #
@@ -170,6 +210,4 @@ prune :
 #
 
 init :
-	wget -q "https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py"
-	python3 bootstrap.py --no-interactive --application-choice=browser
-	rm -rf bootstrap.py
+	bash scripts/mozfetch.sh
