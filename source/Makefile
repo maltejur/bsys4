@@ -16,7 +16,7 @@ clean :
 	rm -rf *~
 
 veryclean : clean
-	rm -flibrewolf-$(version).source.tar.gz
+	rm -f librewolf-$(version).source.tar.gz
 
 librewolf-$(version).source.tar.gz :
 	wget -q -O librewolf-$(version).source.tar.gz https://gitlab.com/stanzabird/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job
