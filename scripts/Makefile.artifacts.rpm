@@ -1,0 +1,54 @@
+.PHONY : all clean veryclean pub shell
+
+version_file=../../version
+version:=$(shell cat $(version_file))
+
+tag=librewolf/bs4-buildenv-$(distro)
+
+build-artifact=librewolf-$(version).en-US.linux-x86_64.tar.bz2
+output=librewolf-$(version)-1.fc35.x86_64.rpm
+
+all : $(output)
+
+clean :
+	$(rm) -rf work
+
+veryclean : clean
+	rm -f $(build-artifact) $(output)
+	rm -f librewolf-*.en-US.linux-x86_64.tar.bz2
+	rm -f librewolf-*.en-US.$(distro).x86_64.rpm
+# pub
+pub : $(output)
+	-mkdir -p ../../pub/librewolf/librewolf-$(version)
+	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
+
+$(output) : work
+	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-rpm.sh $(version)
+# Wrote: /root/rpmbuild/SRPMS/librewolf-94.0.2-1.fc35.src.rpm
+# Wrote: /root/rpmbuild/RPMS/x86_64/librewolf-94.0.2-1.fc35.x86_64.rpm
+	cp -v work/librewolf-94.0.2-1.fc35.x86_64.rpm $(output)
+
+work : $(build-artifact)
+	$(rm) -rf work
+	mkdir work
+	(cd work && tar xf ../$(build-artifact))
+	cp -v ../../scripts/build-rpm.sh work
+	cp -v ../../version work
+	cp -v ../../scripts/librewolf.spec work
+	cp -v ../../scripts/start-librewolf.desktop.in work/librewolf
+	cp -v ../../scripts/start-librewolf work/librewolf
+	cp -v ../../scripts/register-librewolf work/librewolf
+	cp -v ../../scripts/librewolf.ico work/librewolf
+	rm -f work/librewolf/browser/features/proxy-failover@mozilla.com.xpi
+	rm -f work/librewolf/pingsender
+	rm -f work/librewolf/precomplete
+	rm -f work/librewolf/removed-files
+
+
+$(build-artifact) :
+	@(echo "Error: Please use 'make $(distro)' at top-level to build first." && false)
+
+
+shell : work
+	$(docker) pull $(tag)
+	$(docker) run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash

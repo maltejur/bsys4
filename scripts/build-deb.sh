@@ -1,3 +1,6 @@
+
+set -e
+
 mv -v librewolf lwdist
 
 mkdir -p librewolf/DEBIAN
