@@ -52,7 +52,7 @@ clean :
 	make -C artifacts/fedora34 clean
 
 	make -C build/fedora35 clean
-	make -C artifacts/ubuntu35 clean
+	make -C artifacts/fedora35 clean
 
 veryclean : # deliberately not depending on 'clean' in this case.
 	make -C source veryclean
