@@ -1,7 +1,5 @@
 # variable: which distro we want to build this?
-distro=debian11
-
-# .. the rest is the same for all distro's
+distro=macos
 
 docker=sudo docker
 rm=sudo rm
@@ -15,7 +13,10 @@ chown=sudo chown
 version_file=../../version
 version:=$(shell cat $(version_file))
 
-tag=librewolf/bs4-buildenv-$(distro)
+# note: crosscompile host distro = debian11
+tag=librewolf/bs4-buildenv-debian11
+
+
 
 
 help :
@@ -27,20 +28,25 @@ help :
 	@echo "   shell     -  run a shell in the work folder"
 
 
+
 clean :
 	$(rm) -rf work
 
 veryclean : clean
-	rm -f librewolf-$(version).source.tar.gz
 
-librewolf-$(version).source.tar.gz :
-	wget -O librewolf-$(version).source.tar.gz https://gitlab.com/stanzabird/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job
 
-work : librewolf-$(version).source.tar.gz
+
+work :   ../../source/librewolf-$(version).source.tar.gz build.sh mozconfig
 	$(rm) -rf work
 	$(mkdir) work
-	(cd work && $(tar) xf ../$< && cd ..)
+	(cd work && $(tar) xf ../../../source/librewolf-$(version).source.tar.gz && cd ..)
 	$(cp) build.sh work
+	$(cp) mozconfig work/librewolf-$(version)
+
+	$(mkdir) work/librewolf-$(version)/lw-assets/macos
+	(cd work/librewolf-$(version)/lw-assets/macos && sudo wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz)
+	(cd work/librewolf-$(version)/lw-assets/macos && sudo tar xf MacOSX11.3.sdk.tar.xz)
+
 	$(chown) -R root:root work
 
 all : work
