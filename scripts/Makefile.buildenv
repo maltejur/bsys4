@@ -6,28 +6,34 @@ tag=bs4-buildenv-$(distro)
 all : build
 
 clean :
-	rm -f build-deb-buildenv.sh
-      
+	rm -rf buildenv.sh
+
 veryclean : clean
 	-$(docker) rmi $(tag)
 
 build :
 	make -C ../bootstrap all
 	$(rm) -rf mozilla-unified
-	cp ../../scripts/build-deb-buildenv.sh .
+	cp ../../scripts/buildenv.sh .
 	$(docker) build -t $(tag) .
 	cp -r ../bootstrap/mozilla-unified .
-	-sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw $(tag) bash /build-deb-buildenv.sh"
+	mkdir root
+	sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw -v $(shell pwd)/root:/root:rw $(tag) bash /buildenv.sh"
 
 no-cache :
 	make -C ../bootstrap all
 	$(rm) -rf mozilla-unified
-	cp ../../scripts/build-deb-buildenv.sh .
+	cp ../../scripts/buildenv.sh .
 	$(docker) build --no-cache -t $(tag) .
+	rm -f buildenv.sh
 	cp -r ../bootstrap/mozilla-unified .
-	-sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw $(tag) bash /build-deb-buildenv.sh"
+	mkdir root
+	sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw -v $(shell pwd)/root:/root:rw $(tag) $(tag) bash /buildenv.sh"
 
 upload : push
 
 push : build
 	$(docker) push $(tag)
+
+shell :
+	-$(docker) run -it --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw $(tag) bash

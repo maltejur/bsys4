@@ -5,9 +5,10 @@ version:=$(shell cat $(version_file))
 
 include scripts/Makefile.includes
 
+
 help :
 	@echo "use: make [all] [clean] [veryclean] [check]"
-	@echo "          [source] [pub] [buildenv] [no-cache] [upload]"
+	@echo "          [source] [pub] [buildenv] [no-cache]"
 	@echo "          [purge] [prune] [init]"
 	@echo ""
 	@echo "  all         - do: make source [build-all] artifacts pub"
@@ -27,30 +28,38 @@ help :
 	@echo ""
 	@echo "  buildenv    - 'docker build' the images needed for building."
 	@echo "  no-cache    - 'docker build --no-cache' the images."
-	@echo "  upload      - upload the images to docker hub."
 	@echo ""
 	@echo "  purge/prune - remove all docker resources not currently in use."
 	@echo "  init        - run bootstrap.py locally."
 
+
 clean :
+
 	make -C source clean
 
+	make -C buildenv/debian11 clean
 	make -C build/debian11 clean
 	make -C artifacts/debian11 clean
 
+	make -C buildenv/mint20 clean
 	make -C build/mint20 clean
 	make -C artifacts/mint20 clean
 
+	make -C buildenv/ubuntu20 clean
 	make -C build/ubuntu20 clean
 	make -C artifacts/ubuntu20 clean
 
+	make -C buildenv/fedora34 clean
 	make -C build/fedora34 clean
 	make -C artifacts/fedora34 clean
 
+	make -C buildenv/fedora35 clean
 	make -C build/fedora35 clean
 	make -C artifacts/fedora35 clean
 
+
 veryclean : # deliberately not depending on 'clean' in this case.
+
 	make -C source veryclean
 
 	make -C buildenv/debian11 veryclean
@@ -80,27 +89,35 @@ veryclean : # deliberately not depending on 'clean' in this case.
 #
 
 all : source
+
 	make -C source pub
 
 	make debian11
 	make -C artifacts/debian11 pub
-	make -C build/debian11 veryclean # reclaim disk space
+	make -C buildenv/debian11 veryclean
+	make -C build/debian11 veryclean
 
 	make mint20
 	make -C artifacts/mint20 pub
-	make -C build/mint20 veryclean # reclaim disk space
+	make -C buildenv/mint20 veryclean
+	make -C build/mint20 veryclean
 
 	make ubuntu20
 	make -C artifacts/ubuntu20 pub
-	make -C build/ubuntu20 veryclean # reclaim disk space
+	make -C buildenv/ubuntu20 veryclean
+	make -C build/ubuntu20 veryclean
 
 	make fedora34
 	make -C artifacts/fedora34 pub
-	make -C build/fedora35 veryclean # reclaim disk space
+	make -C buildenv/fedora34 veryclean
+	make -C build/fedora35 veryclean
 
 	make fedora35
 	make -C artifacts/fedora35 pub
-	make -C build/fedora35 veryclean # reclaim disk space
+	make -C buildenv/fedora35 veryclean
+	make -C build/fedora35 veryclean
+
+
 
 debian11 :
 	make -C build/debian11 all # perform ./mach build && ./mach package
@@ -121,6 +138,7 @@ fedora34 :
 fedora35 :
 	make -C build/fedora35 all # perform ./mach build && ./mach package
 	make -C artifacts/fedora35 all # make final artifacts
+
 
 
 #
@@ -144,26 +162,21 @@ source :
 #
 
 buildenv :
+
 	make -C buildenv/debian11 build
 	make -C buildenv/mint20 build
 	make -C buildenv/ubuntu20 build
 	make -C buildenv/fedora34 build
 	make -C buildenv/fedora35 build
 
+
 no-cache :
+
 	make -C buildenv/debian11 no-cache
 	make -C buildenv/mint20 no-cache
 	make -C buildenv/ubuntu20 no-cache
 	make -C buildenv/fedora34 no-cache
 	make -C buildenv/fedora35 no-cache
-
-upload :
-	@echo "error: we no longer use 'upload' as a target"
-#	make -C buildenv/debian11 upload
-#	make -C buildenv/mint20 upload
-#	make -C buildenv/ubuntu20 upload
-#	make -C buildenv/fedora34 upload
-#	make -C buildenv/fedora35 upload
 
 
 #
@@ -171,6 +184,7 @@ upload :
 #
 
 pub :
+
 	make -C source pub
 	make -C artifacts/debian11 pub
 	make -C artifacts/mint20 pub

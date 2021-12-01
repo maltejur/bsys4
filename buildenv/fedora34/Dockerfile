@@ -9,20 +9,16 @@ RUN dnf -y reinstall glibc-common
 RUN dnf -y install wget python3 python3-pip python3-devel mercurial
 RUN dnf -y install rpm-build # Install rpm tools for artifact stage.
 
-# Do the thing..
-RUN wget -q https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py
-RUN (python3 bootstrap.py --no-interactive --application-choice=browser && rm -f bootstrap.py)
-
 # tools for 'make shell' in the build and artifact stages.
 RUN dnf -y install emacs vim mc
-
 
 # added this stuff to try make it work, somehow this was
 # not needed with debian based distro's
 # RUN dnf -y install rustc cargo cbindgen clang
 
+COPY buildenv.sh /
 
-
+# our work happens here, on the host filesystem.
 RUN mkdir /work
 WORKDIR /work
 VOLUME ["/work"]
