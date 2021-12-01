@@ -17,7 +17,6 @@ help :
 	@echo ""
 	@echo "  source      - create the source tarball. ( WGET source tarball )"
 	@echo ""
-	@echo "  debian10    - build the browser for Debian 10."
 	@echo "  debian11    - build the browser for Debian 11."
 	@echo "  mint20      - build the browser for Mint 20."
 	@echo "  ubuntu20    - build the browser for Ubuntu 20."
@@ -36,9 +35,6 @@ help :
 clean :
 	make -C source clean
 
-	make -C build/debian10 clean
-	make -C artifacts/debian10 clean
-
 	make -C build/debian11 clean
 	make -C artifacts/debian11 clean
 
@@ -56,10 +52,6 @@ clean :
 
 veryclean : # deliberately not depending on 'clean' in this case.
 	make -C source veryclean
-
-	make -C buildenv/debian10 veryclean
-	make -C build/debian10 veryclean
-	make -C artifacts/debian10 veryclean
 
 	make -C buildenv/debian11 veryclean
 	make -C build/debian11 veryclean
@@ -90,10 +82,6 @@ veryclean : # deliberately not depending on 'clean' in this case.
 all : source
 	make -C source pub
 
-	make debian10
-	make -C artifacts/debian10 pub
-	make -C build/debian10 veryclean # reclaim disk space
-
 	make debian11
 	make -C artifacts/debian11 pub
 	make -C build/debian11 veryclean # reclaim disk space
@@ -113,10 +101,6 @@ all : source
 	make fedora35
 	make -C artifacts/fedora35 pub
 	make -C build/fedora35 veryclean # reclaim disk space
-
-debian10 :
-	make -C build/debian10 all # perform ./mach build && ./mach package
-	make -C artifacts/debian10 all # make final artifacts
 
 debian11 :
 	make -C build/debian11 all # perform ./mach build && ./mach package
@@ -160,7 +144,6 @@ source :
 #
 
 buildenv :
-	make -C buildenv/debian10 build
 	make -C buildenv/debian11 build
 	make -C buildenv/mint20 build
 	make -C buildenv/ubuntu20 build
@@ -168,7 +151,6 @@ buildenv :
 	make -C buildenv/fedora35 build
 
 no-cache :
-	make -C buildenv/debian10 no-cache
 	make -C buildenv/debian11 no-cache
 	make -C buildenv/mint20 no-cache
 	make -C buildenv/ubuntu20 no-cache
@@ -176,12 +158,12 @@ no-cache :
 	make -C buildenv/fedora35 no-cache
 
 upload :
-	make -C buildenv/debian10 upload
-	make -C buildenv/debian11 upload
-	make -C buildenv/mint20 upload
-	make -C buildenv/ubuntu20 upload
-	make -C buildenv/fedora34 upload
-	make -C buildenv/fedora35 upload
+	@echo "error: we no longer use 'upload' as a target"
+#	make -C buildenv/debian11 upload
+#	make -C buildenv/mint20 upload
+#	make -C buildenv/ubuntu20 upload
+#	make -C buildenv/fedora34 upload
+#	make -C buildenv/fedora35 upload
 
 
 #
@@ -190,7 +172,6 @@ upload :
 
 pub :
 	make -C source pub
-	make -C artifacts/debian10 pub
 	make -C artifacts/debian11 pub
 	make -C artifacts/mint20 pub
 	make -C artifacts/ubuntu20 pub

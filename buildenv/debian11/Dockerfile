@@ -11,9 +11,12 @@ RUN apt-get -y install wget git python3 python3-pip python3-dev mercurial
 RUN apt-get -y install emacs-nox vim mc
 
 # The main task: copy the mozilla source in, and bootstrap.
-ADD mozilla-unified /mozilla-unified
-WORKDIR /mozilla-unified
-RUN (./mach bootstrap --application-choice=browser ; true)
+#ADD mozilla-unified /mozilla-unified
+# We no longer ADD (it takes way too long). we bind mount instead.
+#WORKDIR /mozilla-unified
+#RUN (./mach bootstrap --application-choice=browser ; true)
+
+COPY build-deb-buildenv.sh /
 
 # our work happens here, on the host filesystem.
 RUN mkdir /work

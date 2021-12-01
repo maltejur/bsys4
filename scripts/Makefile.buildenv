@@ -1,29 +1,31 @@
 .PHONY : all clean veryclean build no-cache upload push
 
-tag=librewolf/bs4-buildenv-$(distro)
+tag=bs4-buildenv-$(distro)
 
 
 all : build
 
 clean :
-	rm -rf mozilla-unified
-
+	rm -f build-deb-buildenv.sh
+      
 veryclean : clean
 	-$(docker) rmi $(tag)
 
 build :
 	make -C ../bootstrap all
-	rm -rf mozilla-unified
+	$(rm) -rf mozilla-unified
+	cp ../../scripts/build-deb-buildenv.sh .
+	$(docker) build -t $(tag) .
 	cp -r ../bootstrap/mozilla-unified .
-	sudo script -e -c "time docker build -t $(tag) ."
-	rm -rf mozilla-unified
+	-sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw $(tag) bash /build-deb-buildenv.sh"
 
 no-cache :
 	make -C ../bootstrap all
+	$(rm) -rf mozilla-unified
+	cp ../../scripts/build-deb-buildenv.sh .
+	$(docker) build --no-cache -t $(tag) .
 	cp -r ../bootstrap/mozilla-unified .
-	rm -rf mozilla-unified
-	sudo script -e -c "time docker build --no-cache -t $(tag) ."
-	rm -rf mozilla-unified
+	-sudo script -e -c "time docker run --rm --privileged -v $(shell pwd)/mozilla-unified:/mozilla-unified:rw $(tag) bash /build-deb-buildenv.sh"
 
 upload : push
 
