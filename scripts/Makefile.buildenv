@@ -6,14 +6,24 @@ tag=librewolf/bs4-buildenv-$(distro)
 all : build
 
 clean :
+	rm -rf mozilla-unified
+
 veryclean : clean
 	-$(docker) rmi $(tag)
 
 build :
-	$(docker) build -t $(tag) .
+	make -C ../bootstrap all
+	rm -rf mozilla-unified
+	cp -r ../bootstrap/mozilla-unified .
+	sudo script -e -c "time docker build -t $(tag) ."
+	rm -rf mozilla-unified
 
 no-cache :
-	$(docker) build --no-cache -t $(tag) .
+	make -C ../bootstrap all
+	cp -r ../bootstrap/mozilla-unified .
+	rm -rf mozilla-unified
+	sudo script -e -c "time docker build --no-cache -t $(tag) ."
+	rm -rf mozilla-unified
 
 upload : push
 

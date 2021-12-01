@@ -170,6 +170,7 @@ buildenv :
 no-cache :
 	make -C buildenv/debian10 no-cache
 	make -C buildenv/debian11 no-cache
+	make -C buildenv/mint20 no-cache
 	make -C buildenv/ubuntu20 no-cache
 	make -C buildenv/fedora34 no-cache
 	make -C buildenv/fedora35 no-cache
@@ -177,6 +178,7 @@ no-cache :
 upload :
 	make -C buildenv/debian10 upload
 	make -C buildenv/debian11 upload
+	make -C buildenv/mint20 upload
 	make -C buildenv/ubuntu20 upload
 	make -C buildenv/fedora34 upload
 	make -C buildenv/fedora35 upload
