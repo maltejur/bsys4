@@ -12,11 +12,10 @@ RUN dnf -y install rpm-build # Install rpm tools for artifact stage.
 # tools for 'make shell' in the build and artifact stages.
 RUN dnf -y install emacs vim mc
 
-# added this stuff to try make it work, somehow this was
-# not needed with debian based distro's
-# RUN dnf -y install rustc cargo cbindgen clang
-
 COPY buildenv.sh /
+ADD mozilla-unified /mozilla-unified
+WORKDIR /mozilla-unified
+RUN ./mach --no-interactive bootstrap --application-choice=browser
 
 # our work happens here, on the host filesystem.
 RUN mkdir /work

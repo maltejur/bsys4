@@ -3,7 +3,7 @@
 version_file=../../version
 version:=$(shell cat $(version_file))
 
-tag=librewolf/bs4-buildenv-$(distro)
+tag=bs4-buildenv-$(distro)
 
 build-artifact=librewolf-$(version).en-US.linux-x86_64.tar.bz2
 output=librewolf-$(version).en-US.$(distro).x86_64.deb
@@ -23,7 +23,7 @@ pub : $(output)
 	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
 
 $(output) : work
-	$(docker) run --rm --privileged --volume $(shell pwd)/mozilla-unified:/mozilla-unified:rw -v $(shell pwd)/work:/work:rw $(tag) bash build-deb.sh $(version)
+	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-deb.sh $(version)
 	cp -v work/librewolf.deb $(output)
 
 work : $(build-artifact)
@@ -38,4 +38,4 @@ $(build-artifact) :
 
 shell : work
 	$(docker) pull $(tag)
-	$(docker) run -it --rm --privileged --volume $(shell pwd)/mozilla-unified:/mozilla-unified:rw -v $(shell pwd)/work:/work:rw $(tag) bash
+	$(docker) run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash

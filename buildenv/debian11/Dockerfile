@@ -11,6 +11,9 @@ RUN apt-get -y install wget git python3 python3-pip python3-dev mercurial
 RUN apt-get -y install emacs-nox vim mc
 
 COPY buildenv.sh /
+ADD mozilla-unified /mozilla-unified
+WORKDIR /mozilla-unified
+RUN ./mach --no-interactive bootstrap --application-choice=browser
 
 # our work happens here, on the host filesystem.
 RUN mkdir /work

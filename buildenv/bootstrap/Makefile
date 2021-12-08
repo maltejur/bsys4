@@ -1,4 +1,4 @@
-.PHONY : all clean veryclean
+.PHONY : help all clean veryclean
 
 help :
 	@echo "use: make [all] [clean] [veryclean]"
@@ -9,7 +9,7 @@ all : mozilla-unified
 
 mozilla-unified :
 	hg clone https://hg.mozilla.org/mozilla-unified
-	hg update
+	(cd mozilla-unified && hg update)
 
 clean :
 
