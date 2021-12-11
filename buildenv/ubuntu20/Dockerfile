@@ -13,6 +13,7 @@ COPY buildenv.sh /
 ADD mozilla-unified /mozilla-unified
 WORKDIR /mozilla-unified
 RUN ./mach --no-interactive bootstrap --application-choice=browser
+RUN pip install testresources pycairo
 
 # our work happens here, on the host filesystem.
 RUN mkdir /work

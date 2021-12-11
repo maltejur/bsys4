@@ -1,4 +1,4 @@
-distro=fedora35
-fc=fc35
+distro=fedora34
+fc=fc34
 include ../../scripts/Makefile.includes
 include ../../scripts/Makefile.artifacts.rpm

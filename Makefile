@@ -180,6 +180,18 @@ no-cache :
 
 
 #
+# artifacts
+#
+
+artifacts :
+
+	make -C artifacts/debian11 all
+	make -C artifacts/mint20 all
+	make -C artifacts/ubuntu20 all
+	make -C artifacts/fedora34 all
+	make -C artifacts/fedora35 all
+
+#
 # pub
 #
 

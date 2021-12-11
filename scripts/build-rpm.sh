@@ -26,6 +26,9 @@ rm -rf rpmbuild
 mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 sed "s/__VERSION__/$version/g" < /work/librewolf.spec > rpmbuild/SPECS/librewolf.spec
 
+# make some scripts executable
+chmod +x /work/librewolf/register-librewolf /work/librewolf/start-librewolf
+
 
 # copy in the librewolf assets
 cp -rv /work/librewolf rpmbuild/SOURCES
@@ -62,11 +65,9 @@ echo '---'
 echo "[debug] Running rpmbuild.."
 echo '---'
 
-rpmbuild -v -ba $(pwd)/rpmbuild/SPECS/librewolf.spec
+rpmbuild -v -bb $(pwd)/rpmbuild/SPECS/librewolf.spec
 echo '--- [debug] Copying output files to /artifacts'
 
 
-#Wrote: /root/rpmbuild/SRPMS/librewolf-94.0.2-1.fc35.src.rpm
 #Wrote: /root/rpmbuild/RPMS/x86_64/librewolf-94.0.2-1.fc35.x86_64.rpm
 cp -v ~/rpmbuild/RPMS/x86_64/librewolf-*.rpm /work
-cp -v ~/rpmbuild/SRPMS/librewolf-*.rpm /work

@@ -31,6 +31,14 @@ cd usr/bin
 ln -vs ../share/librewolf/librewolf
 cd ../..
 
+# add the application icon
+mkdir -p usr/share/applications
+mkdir -p usr/share/icons
+cp -v usr/share/librewolf/browser/chrome/icons/default/default64.png usr/share/icons/librewolf.png
+cp -v ../register-librewolf ../start-librewolf ../start-librewolf.desktop usr/share/librewolf
+chmod +x usr/share/librewolf/register-librewolf usr/share/librewolf/start-librewolf
+cp -v ../start-librewolf.desktop usr/share/applications
+
 cd ..
 dpkg-deb --build librewolf
 

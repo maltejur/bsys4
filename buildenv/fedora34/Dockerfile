@@ -1,4 +1,4 @@
-FROM fedora:35
+FROM fedora:34
 RUN dnf -y update
 
 # locale stuff, see: https://superuser.com/questions/959380/how-do-i-install-generate-all-locales-on-fedora
