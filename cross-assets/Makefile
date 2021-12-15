@@ -1,13 +1,11 @@
+osx_sdk_file=MacOSX10.12.sdk.tar.xz
 
-# (adjust for your folder with the sdk's and tools)
-source_folder=../../bs4-cross-assets
+all : $(osx_sdk_file)
 
-all : MacOSX11.1-sdk.zip
-
-MacOSX11.1-sdk.zip :
-	cp -v ../../bs4-cross-assets/macos/MacOSX11.1-sdk.zip .
+$(osx_sdk_file) :
+	wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
 
 clean :
-	rm -f MacOSX11.1-sdk.zip
+	rm -f $(osx_sdk_file)
 
 veryclean : clean
