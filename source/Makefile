@@ -13,15 +13,15 @@ help :
 	@echo "  pub           - copy Libewolf source to pub folder"
 
 clean :
-	rm -rf *~
+	rm -f librewolf-$(version).source.tar.gz
 
 veryclean : clean
-	rm -f librewolf-$(version).source.tar.gz
 
 librewolf-$(version).source.tar.gz :
 	wget -q -O librewolf-$(version).source.tar.gz https://gitlab.com/stanzabird/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job
 
 
 pub : librewolf-$(version).source.tar.gz
+	-mkdir -p ../pub/librewolf/librewolf-$(version)
 	cp -v $< ../pub/librewolf/librewolf-$(version)
 

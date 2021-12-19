@@ -10,6 +10,7 @@ all : build
 clean :
 	rm -rf work
 veryclean : clean
+	rm -f typescript
 
 work : ../../source/librewolf-$(version).source.tar.gz
 	rm -rf work

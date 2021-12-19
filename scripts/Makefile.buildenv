@@ -10,6 +10,7 @@ clean :
 
 veryclean : clean
 	rm -rf mozilla-unified
+	rm -f typescript
 
 mozilla-unified :
 	cp -r ../bootstrap/mozilla-unified .

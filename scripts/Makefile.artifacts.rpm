@@ -15,9 +15,7 @@ clean :
 
 veryclean : clean
 	rm -f $(build-artifact) $(output)
-	rm -f librewolf-*.en-US.linux-x86_64.tar.bz2
-	rm -f librewolf-*.en-US.$(distro).x86_64.rpm
-# pub
+
 pub : $(output)
 	-mkdir -p ../../pub/librewolf/librewolf-$(version)
 	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
