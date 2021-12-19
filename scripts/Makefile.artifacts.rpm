@@ -11,7 +11,7 @@ output=librewolf-$(version)-1.$(fc).x86_64.rpm
 all : $(output)
 
 clean :
-	$(rm) -rf work
+	rm -rf work
 
 veryclean : clean
 	rm -f $(build-artifact) $(output)
@@ -23,11 +23,11 @@ pub : $(output)
 	cp -v $(output) ../../pub/librewolf/librewolf-$(version)
 
 $(output) : work
-	$(docker) run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash build-rpm.sh $(version)
+	docker run --rm -v $(shell pwd)/work:/work:rw $(tag) bash build-rpm.sh $(version)
 	cp -v work/$(output) $(output)
 
 work : $(build-artifact)
-	$(rm) -rf work
+	rm -rf work
 	mkdir work
 	(cd work && tar xf ../$(build-artifact))
 	cp -v ../../scripts/build-rpm.sh work
@@ -48,5 +48,4 @@ $(build-artifact) :
 
 
 shell : work
-	$(docker) pull $(tag)
-	$(docker) run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash
+	docker run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash

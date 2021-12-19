@@ -11,3 +11,4 @@ RUN (cd /mozilla-unified && ./mach artifact toolchain --from-build linux64-hfspl
 RUN (cd /mozilla-unified && ./mach artifact toolchain --from-build linux64-binutils)
 RUN (cd /mozilla-unified && ./mach artifact toolchain --from-build linux64-clang-macosx-cross)
 RUN (cd /mozilla-unified && ./mach build )
+RUN (cd /mozilla-unified && ./mach package )
