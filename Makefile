@@ -108,7 +108,7 @@ all : source
 	make fedora34
 	make -C artifacts/fedora34 pub
 	make -C buildenv/fedora34 veryclean
-	make -C build/fedora35 veryclean
+	make -C build/fedora34 veryclean
 
 	make fedora35
 	make -C artifacts/fedora35 pub
