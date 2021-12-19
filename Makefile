@@ -1,10 +1,7 @@
-.PHONY : all help clean veryclean check source buildenv build artifacts pub purge init
+.PHONY : all help clean veryclean check commit source mozilla buildenv build artifacts pub prune
 
 version_file=./version
 version:=$(shell cat $(version_file))
-
-include scripts/Makefile.includes
-
 
 help :
 	@echo "use: make [all] [clean] [veryclean] [check]"
@@ -15,8 +12,10 @@ help :
 	@echo "  clean       - clean the biggest folders and intermediate results."
 	@echo "  veryclean   - clean everything, including sources and artifacts."
 	@echo "  check       - check if there is a new version of Firefox."
+	@echo "  commit      - commit and push current changes."
 	@echo ""
-	@echo "  source      - create the source tarball. ( WGET source tarball )"
+	@echo "  source      - wget the latest source tarball."
+	@echo "  mozilla     - hg clone/update mozilla-unified."
 	@echo ""
 	@echo "  debian11    - build the browser for Debian 11."
 	@echo "  mint20      - build the browser for Mint 20."
@@ -29,8 +28,7 @@ help :
 	@echo "  buildenv    - 'docker build' the images needed for building."
 	@echo "  no-cache    - 'docker build --no-cache' the images."
 	@echo ""
-	@echo "  purge/prune - remove all docker resources not currently in use."
-	@echo "  init        - run bootstrap.py locally."
+	@echo "  prune       - remove all docker resources not currently in use."
 
 
 clean :
@@ -58,7 +56,7 @@ clean :
 	make -C artifacts/fedora35 clean
 
 
-veryclean : # deliberately not depending on 'clean' in this case.
+veryclean : clean
 
 	make -C source veryclean
 
@@ -206,17 +204,16 @@ pub :
 
 
 #
+# commit
+#
+
+commit :
+	git commit -am "$$(date)"
+
+
+#
 # zapping all docker state..
 #
 
-purge : prune
 prune :
-	$(docker) system prune --all --force
-
-
-#
-# init: run bootstrap on local machine
-#
-
-init :
-	bash scripts/mozfetch.sh
+	docker system prune --all --force

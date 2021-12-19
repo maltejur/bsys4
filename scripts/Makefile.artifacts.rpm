@@ -46,4 +46,4 @@ $(build-artifact) :
 
 
 shell : work
-	docker run -it --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) bash
+	docker run -it --rm -v $(shell pwd)/work:/work:rw $(tag) bash

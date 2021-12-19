@@ -13,6 +13,7 @@ veryclean : clean
 	rm -f typescript
 
 mozilla-unified :
+	make -C ../../mozilla all
 	cp -r ../../mozilla/mozilla-unified .
 
 build :
