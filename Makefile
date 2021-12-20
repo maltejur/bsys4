@@ -1,4 +1,4 @@
-.PHONY : all help clean veryclean check commit source mozilla buildenv build artifacts pub prune
+.PHONY : all all_scripted help clean veryclean check commit source mozilla buildenv build artifacts pub prune
 
 version_file=./version
 version:=$(shell cat $(version_file))
@@ -32,7 +32,6 @@ help :
 
 
 clean :
-
 	make -C source clean
 
 	make -C buildenv/debian11 clean
@@ -86,9 +85,11 @@ veryclean : clean
 # disk space.
 #
 
-all : source
+all :
+	script -e -c "time make veryclean all_scripted"
 
-	make -C source pub
+all_scripted :
+	make -C source all pub
 
 	make debian11
 	make -C artifacts/debian11 pub

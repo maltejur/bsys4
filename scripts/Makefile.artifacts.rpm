@@ -11,7 +11,7 @@ output=librewolf-$(version)-1.$(fc).x86_64.rpm
 all : $(output)
 
 clean :
-	rm -rf work
+	sudo rm -rf work
 
 veryclean : clean
 	rm -f $(build-artifact) $(output)
@@ -25,7 +25,7 @@ $(output) : work
 	cp -v work/$(output) $(output)
 
 work : $(build-artifact)
-	rm -rf work
+	make clean
 	mkdir work
 	(cd work && tar xf ../$(build-artifact))
 	cp -v ../../scripts/build-rpm.sh work
