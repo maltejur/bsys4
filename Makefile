@@ -79,6 +79,7 @@ veryclean : clean
 	make -C build/fedora35 veryclean
 	make -C artifacts/fedora35 veryclean
 
+	rm -f typescript
 
 #
 # The 'all' target builds everything while trying to minimize
