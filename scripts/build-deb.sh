@@ -19,7 +19,7 @@ Priority: optional
 Provides: gnome-www-browser, www-browser, x-www-browser
 Section: web
 EOF
- echo "Version: $1" >> control
+ echo "Version: $1-$2" >> control
 cd ..
 
 mkdir -p usr/share/librewolf
