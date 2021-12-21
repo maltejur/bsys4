@@ -1,6 +1,6 @@
 Name:           librewolf
 Version:        __VERSION__
-Release:        1%{?dist}
+Release:        __RELEASE__%{?dist}
 BuildArch:      x86_64
 Summary:        The LibreWolf browser
 License:        MPL

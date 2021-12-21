@@ -2,11 +2,13 @@
 
 version_file=../../version
 version:=$(shell cat $(version_file))
+release_file=../../release
+release:=$(shell cat $(release_file))
 
 tag=bs4-buildenv-$(distro)
 
 build-artifact=librewolf-$(version).en-US.linux-x86_64.tar.bz2
-output=librewolf-$(version)-1.$(fc).x86_64.rpm
+output=librewolf-$(version)-$(release).$(fc).x86_64.rpm
 
 all : $(output)
 
@@ -30,6 +32,7 @@ work : $(build-artifact)
 	(cd work && tar xf ../$(build-artifact))
 	cp -v ../../scripts/build-rpm.sh work
 	cp -v ../../version work
+	cp -v ../../release work
 	cp -v ../../scripts/librewolf.spec work
 	cp -v ../../scripts/start-librewolf.desktop.in work/librewolf
 	cp -v ../../scripts/start-librewolf work/librewolf

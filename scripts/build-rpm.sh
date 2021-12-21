@@ -8,9 +8,11 @@ cd /WORK
 mkdir /artifacts
 
 version=$(cat /work/version)
+release=$(cat /work/release)
 
 echo '---'
 echo "--- LibreWolf version file is: $version"
+echo "--- LibreWolf release is: $release"
 echo '---'
 echo '--- Contents of /artifacts folder:'
 ls -la /artifacts
@@ -24,7 +26,8 @@ echo '---'
 
 rm -rf rpmbuild
 mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-sed "s/__VERSION__/$version/g" < /work/librewolf.spec > rpmbuild/SPECS/librewolf.spec
+sed "s/__VERSION__/$version/g" < /work/librewolf.spec > /work/tmp.spec
+sed "s/__RELEASE__/$release/g" < /work/tmp.spec > rpmbuild/SPECS/librewolf.spec
 
 # make some scripts executable
 chmod +x /work/librewolf/register-librewolf /work/librewolf/start-librewolf
