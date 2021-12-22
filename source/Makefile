@@ -18,7 +18,7 @@ clean :
 veryclean : clean
 
 librewolf-$(version).source.tar.gz :
-	wget -q -O librewolf-$(version).source.tar.gz https://gitlab.com/stanzabird/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job
+	wget -q -O librewolf-$(version).source.tar.gz "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job"
 
 
 pub : librewolf-$(version).source.tar.gz
