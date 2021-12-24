@@ -1,6 +1,8 @@
 .PHONY : all help clean veryclean pub
 version_file=../version
 version:=$(shell cat $(version_file))
+release_file=../release
+release:=$(shell cat $(release_file))
 
 all : librewolf-$(version).source.tar.gz
 
@@ -23,5 +25,5 @@ librewolf-$(version).source.tar.gz :
 
 pub : librewolf-$(version).source.tar.gz
 	-mkdir -p ../pub/librewolf/librewolf-$(version)
-	cp -v $< ../pub/librewolf/librewolf-$(version)
+	cp -v $< ../pub/librewolf/librewolf-$(version)/librewolf-$(version)-$(release).source.tar.gz
 
