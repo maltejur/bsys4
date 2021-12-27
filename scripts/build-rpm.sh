@@ -1,4 +1,3 @@
-
 set -e
 
 rm -rf /WORK
@@ -28,10 +27,6 @@ rm -rf rpmbuild
 mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 sed "s/__VERSION__/$version/g" < /work/librewolf.spec > /work/tmp.spec
 sed "s/__RELEASE__/$release/g" < /work/tmp.spec > rpmbuild/SPECS/librewolf.spec
-
-# make some scripts executable
-chmod +x /work/librewolf/register-librewolf /work/librewolf/start-librewolf
-
 
 # copy in the librewolf assets
 cp -rv /work/librewolf rpmbuild/SOURCES

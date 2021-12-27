@@ -35,8 +35,6 @@ work : $(build-artifact)
 	cp -v ../../release work
 	cp -v ../../scripts/librewolf.spec work
 	cp -v ../../scripts/start-librewolf.desktop.in work/librewolf
-	cp -v ../../scripts/start-librewolf work/librewolf
-	cp -v ../../scripts/register-librewolf work/librewolf
 	cp -v ../../scripts/librewolf.ico work/librewolf
 	rm -f work/librewolf/browser/features/proxy-failover@mozilla.com.xpi
 	rm -f work/librewolf/pingsender

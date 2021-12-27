@@ -31,7 +31,7 @@ work : $(build-artifact)
 	mkdir work
 	(cd work && tar xf ../$(build-artifact))
 	cp -v ../../scripts/build-deb.sh work
-	cp -v ../../scripts/register-librewolf ../../scripts/start-librewolf ../../scripts/start-librewolf.desktop.in work
+	cp -v ../../scripts/start-librewolf.desktop.in work
 	(cd work && sed "s/MYDIR/\/usr\/share\/librewolf/g" < start-librewolf.desktop.in > start-librewolf.desktop)
 
 $(build-artifact) :
