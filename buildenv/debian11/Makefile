@@ -1,2 +1,2 @@
 distro=debian11
-include ../../scripts/Makefile.buildenv
+include ../../scripts/buildenv.mk

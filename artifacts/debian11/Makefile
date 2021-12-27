@@ -1,2 +1,2 @@
 distro=debian11
-include ../../scripts/Makefile.artifacts.deb
+include ../../scripts/make-artifacts-deb.mk

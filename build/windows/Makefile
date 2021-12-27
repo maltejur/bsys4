@@ -1,2 +1,2 @@
 distro=windows
-include ../../scripts/Makefile.build
+include ../../scripts/build.mk

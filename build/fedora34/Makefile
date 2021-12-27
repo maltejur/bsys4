@@ -1,2 +1,2 @@
 distro=fedora34
-include ../../scripts/Makefile.build
+include ../../scripts/build.mk

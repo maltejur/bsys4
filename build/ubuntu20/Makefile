@@ -1,2 +1,2 @@
 distro=ubuntu20
-include ../../scripts/Makefile.build
+include ../../scripts/build.mk

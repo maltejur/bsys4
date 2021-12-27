@@ -16,7 +16,7 @@ clean :
 	sudo rm -rf work
 
 veryclean : clean
-	rm -f $(build-artifact) $(output)
+	rm -f $(build-artifact) $(output) *.deb
 
 pub : $(output)
 	-mkdir -p ../../pub/librewolf/librewolf-$(version)
