@@ -28,7 +28,8 @@ work : ../../source/librewolf-$(version)-$(release).source.tar.gz
 
 build : work
 	script -e -c "time docker run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build-librewolf.py $(version)"
-	cp -v work/librewolf-$(version)/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
+	#cp -v work/librewolf-$(version)/obj-x86_64-pc-linux-gnu/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
+	cp -v work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 
 
 
