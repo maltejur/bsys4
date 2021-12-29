@@ -11,4 +11,4 @@
 ## Experimental:
 
 * macos: [docker-build stage](https://gitlab.com/librewolf-community/browser/bsys4/-/tree/main/buildenv/macos), [build stage](https://gitlab.com/librewolf-community/browser/bsys4/-/tree/main/build/macos), _artifact stage_.
-* windows: 
+* windows: ([ticket #142](https://gitlab.com/librewolf-community/browser/windows/-/issues/142) - Compilation machine failed)
