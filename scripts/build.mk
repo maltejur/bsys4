@@ -18,7 +18,7 @@ veryclean : clean
 
 
 
-work : ../../source/librewolf-$(version)-$(release).source.tar.gz
+work : ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz
 	make clean
 	mkdir work
 	(cd work && tar xf ../$<)
