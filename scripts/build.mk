@@ -2,6 +2,8 @@
 
 version_file=../../version
 version:=$(shell cat $(version_file))
+release_file=../../release
+release:=$(shell cat $(release_file))
 
 tag=bs4-buildenv-$(distro)
 
@@ -16,11 +18,11 @@ veryclean : clean
 
 
 
-work : ../../source/librewolf-$(version).source.tar.gz
+work : ../../source/librewolf-$(version)-$(release).source.tar.gz
 	make clean
 	mkdir work
 	(cd work && tar xf ../$<)
-	cp -v work/librewolf-$(version)/lw-assets/build-librewolf.py work/librewolf-$(version)
+	cp -v ../../assets/build-librewolf.py work/librewolf-$(version)
 
 
 

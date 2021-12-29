@@ -3,27 +3,33 @@ version_file=../version
 version:=$(shell cat $(version_file))
 release_file=../release
 release:=$(shell cat $(release_file))
+source_release:=$(shell cat ./source_release)
 
-all : librewolf-$(version).source.tar.gz
+all : source_release librewolf-$(version)-$(release).source.tar.gz
 
-help :
+librewolf-$(version)-$(release).source.tar.gz : source_release librewolf-$(version)-$(source_release).source.tar.gz
+	cp -v $< $@
+
+help : source_release 
 	@echo "Use: make [all] [clean] [veryclean] [pub]"
 	@echo ""
-	@echo "  all           - build librewolf-$(version).source.tar.gz"
+	@echo "  all           - build librewolf-$(version)-$(source_release).source.tar.gz"
 	@echo "  clean         - remove all source trees and other cruft"
 	@echo "  veryclean     - same as clean, but also remove source archives"
 	@echo "  pub           - copy Libewolf source to pub folder"
 
-clean :
-	rm -f librewolf-$(version).source.tar.gz
+clean : source_release 
+	rm -f librewolf-$(version)-$(source_release).source.tar.gz
 
 veryclean : clean
 
-librewolf-$(version).source.tar.gz :
-	wget -q -O librewolf-$(version).source.tar.gz "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(version).source.tar.gz?job=build-job"
+librewolf-$(version)-$(source_release).source.tar.gz : source_release 
+	wget -q -O librewolf-$(version)-$(source_release).source.tar.gz "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(version)-$(source_release).source.tar.gz?job=build-job"
 
 
-pub : librewolf-$(version).source.tar.gz
+pub : source_release librewolf-$(version)-$(source_release).source.tar.gz
 	-mkdir -p ../pub/librewolf/librewolf-$(version)
 	cp -v $< ../pub/librewolf/librewolf-$(version)/librewolf-$(version)-$(release).source.tar.gz
 
+source_release :
+	wget -q -O $@ "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
