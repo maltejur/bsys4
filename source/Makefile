@@ -5,10 +5,12 @@ release_file=../release
 release:=$(shell cat $(release_file))
 source_release:=$(shell cat ./source_release)
 
-all : source_release librewolf-$(version)-$(release).source.tar.gz
+all : source_release librewolf-$(version)-$(source_release).source.tar.gz
 
-librewolf-$(version)-$(release).source.tar.gz : source_release librewolf-$(version)-$(source_release).source.tar.gz
-	cp -v $< $@
+#
+#librewolf-$(version)-$(release).source.tar.gz : source_release librewolf-$(version)-$(source_release).source.tar.gz
+#	cp -v librewolf-$(version)-$(source_release).source.tar.gz $@
+#
 
 help : source_release 
 	@echo "Use: make [all] [clean] [veryclean] [pub]"
@@ -27,9 +29,8 @@ librewolf-$(version)-$(source_release).source.tar.gz : source_release
 	wget -q -O librewolf-$(version)-$(source_release).source.tar.gz "https://gitlab.com/librewolf-community/browser/source/-/jobs/artifacts/main/raw/librewolf-$(version)-$(source_release).source.tar.gz?job=build-job"
 
 
-pub : source_release librewolf-$(version)-$(source_release).source.tar.gz
-	-mkdir -p ../pub/librewolf/librewolf-$(version)
-	cp -v $< ../pub/librewolf/librewolf-$(version)/librewolf-$(version)-$(release).source.tar.gz
+pub : 
+	@echo "note: Source archive not distributed."
 
 source_release :
 	wget -q -O $@ "https://gitlab.com/librewolf-community/browser/source/-/raw/main/release"
