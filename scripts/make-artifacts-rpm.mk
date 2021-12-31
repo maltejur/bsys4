@@ -5,7 +5,7 @@ version:=$(shell cat $(version_file))
 release_file=../../release
 release:=$(shell cat $(release_file))
 
-tag=bs4-buildenv-$(distro)
+tag=librewolf/bsys4-buildenv-$(distro)
 
 build-artifact=librewolf-$(version).en-US.linux-x86_64.tar.bz2
 output=librewolf-$(version)-$(release).$(fc).x86_64.rpm

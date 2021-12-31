@@ -5,7 +5,7 @@ version:=$(shell cat $(version_file))
 release_file=../../release
 release:=$(shell cat $(release_file))
 
-tag=bs4-buildenv-$(distro)
+tag=librewolf/bsys4-buildenv-$(distro)
 
 
 all : build

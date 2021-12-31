@@ -27,6 +27,7 @@ help :
 	@echo ""
 	@echo "  buildenv    - 'docker build' the images needed for building."
 	@echo "  no-cache    - 'docker build --no-cache' the images."
+	@echo "  push        - 'docker push' the images."
 	@echo ""
 	@echo "  prune       - remove all docker resources not currently in use."
 
@@ -177,6 +178,14 @@ no-cache :
 	make -C buildenv/ubuntu20 no-cache
 	make -C buildenv/fedora34 no-cache
 	make -C buildenv/fedora35 no-cache
+
+push :
+
+	make -C buildenv/debian11 push
+	make -C buildenv/mint20 push
+	make -C buildenv/ubuntu20 push
+	make -C buildenv/fedora34 push
+	make -C buildenv/fedora35 push
 
 
 #
