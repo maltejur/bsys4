@@ -14,9 +14,7 @@ RUN dnf -y install emacs vim mc
 
 COPY buildenv.sh /
 ADD mozilla-unified /mozilla-unified
-WORKDIR /mozilla-unified
-RUN ./mach --no-interactive bootstrap --application-choice=browser
-RUN pip install testresources pycairo
+RUN bash buildenv.sh
 
 # our work happens here, on the host filesystem.
 RUN mkdir /work
