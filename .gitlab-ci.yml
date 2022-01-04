@@ -5,4 +5,5 @@ debian11-job:
   stage: build
   image: librewolf/bsys4-buildenv-debian11
   script:
+    - make source
     - make debian11
