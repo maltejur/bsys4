@@ -30,7 +30,10 @@ build : work
 	cp -v work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 
 
-
+ci : work
+	python3 /work/librewolf-$(version)/build-librewolf.py $(version)
+	mkdir -p /artifacts
+	cp -v /work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 /artifacts/
 
 shell : work
 	-docker run -it --rm -v $(shell pwd)/work:/work:rw $(tag) bash

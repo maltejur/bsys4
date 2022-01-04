@@ -7,5 +7,8 @@ debian11-job:
   image: librewolf/bsys4-buildenv-debian11
   script:
     - make -C source source_release
-    - make source
-    - make debian11
+    - make -C source all
+    - make -C build/debian11 ci
+  artifacts:
+    paths:
+      - /artifacts/librewolf-*.tar.bz2
