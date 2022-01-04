@@ -19,7 +19,6 @@ veryclean : clean
 
 
 work : ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz
-	make clean
 	mkdir work
 	(cd work && tar xf ../$<)
 	cp -v ../../assets/build-librewolf.py work/librewolf-$(version)
@@ -28,7 +27,6 @@ work : ../../source/librewolf-$(version)-$(shell cat ../../source/source_release
 
 build : work
 	script -e -c "time docker run --rm --privileged -v $(shell pwd)/work:/work:rw $(tag) python3 /work/librewolf-$(version)/build-librewolf.py $(version)"
-	#cp -v work/librewolf-$(version)/obj-x86_64-pc-linux-gnu/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 	cp -v work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 
 
