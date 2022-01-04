@@ -30,18 +30,23 @@ build : work
 	cp -v work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 
 
-ci :
-	mv -v ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz /work
-	( cd /work && tar xf librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz )
-	cp -v ../../assets/build-librewolf.py /work/librewolf-$(version)
-	( cd /work/librewolf-$(version) && python3 /work/librewolf-$(version)/build-librewolf.py $(version) )
-	mkdir -p /artifacts
-	cp -v /work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 /artifacts/
-
 shell : work
 	-docker run -it --rm -v $(shell pwd)/work:/work:rw $(tag) bash
 
 shell-no-work :
 	-docker run -it --rm $(tag) bash
 
+
+# source: mozilla-unified/python/mozboot/mozboot/debian.py
+install-debian11 install-ubuntu20 install-mint20 :
+	apt-get install -y build-essential libpython3-dev m4 unzip uuid zip libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdbus-glib-1-dev libdrm-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb
+
+ci :
+	make install-$(distro)
+	mv -v ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz /work
+	( cd /work && tar xf librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz )
+	cp -v ../../assets/build-librewolf.py /work/librewolf-$(version)
+	( cd /work/librewolf-$(version) && python3 /work/librewolf-$(version)/build-librewolf.py $(version) )
+	mkdir -p /artifacts
+	cp -v /work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 /artifacts/
 
