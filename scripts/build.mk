@@ -18,7 +18,7 @@ veryclean : clean
 
 
 
-work : ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz
+work : 
 	mkdir work
 	(cd work && tar xf ../$<)
 	cp -v ../../assets/build-librewolf.py work/librewolf-$(version)
@@ -30,8 +30,11 @@ build : work
 	cp -v work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 ../../artifacts/$(distro)
 
 
-ci : work
-	python3 /work/librewolf-$(version)/build-librewolf.py $(version)
+ci :
+	mv -v ../../source/librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz /work
+	( cd /work && tar xf librewolf-$(version)-$(shell cat ../../source/source_release).source.tar.gz )
+	cp -v ../../assets/build-librewolf.py /work/librewolf-$(version)
+	( cd /work/librewolf-$(version) && python3 /work/librewolf-$(version)/build-librewolf.py $(version) )
 	mkdir -p /artifacts
 	cp -v /work/librewolf-$(version)/obj-*/dist/librewolf-$(version).en-US.linux-x86_64.tar.bz2 /artifacts/
 
