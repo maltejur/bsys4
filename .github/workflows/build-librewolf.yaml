@@ -1,0 +1,11 @@
+jobs:
+  debian11:
+    runs-on: ubuntu-latest
+    container: librewolf/bsys4-buildenv-debian11
+    steps:
+      - run: make -C source source_release
+      - run: make -C source all
+      - run: make -C build/debian11 ci
+      - uses: actions/upload-artifact@v2
+        with:
+          path: /artifacts/librewolf-*.tar.bz2
