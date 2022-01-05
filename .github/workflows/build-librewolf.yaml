@@ -1,3 +1,6 @@
+on:
+  workflow_dispatch:
+
 jobs:
   debian11:
     runs-on: ubuntu-latest
